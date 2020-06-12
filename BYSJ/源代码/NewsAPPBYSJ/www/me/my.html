@@ -1,0 +1,521 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" href="../../css/login.css" />
+		<script src="../../js/mui.min.js"></script>
+		<style type="text/css">
+		.list-icon{
+			width: 25px;
+			height: 25px;
+			margin-top: 10px;
+			float: left;
+		}
+		.list-title{
+			font-size: 14px;
+			display: inline-block;
+			/* position: fixed; */
+			float: left;
+			margin-top: 14px;
+			margin-left: 12px;
+		}
+		
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+			margin: 0px;
+			padding: 5px 10px;
+			vertical-align: top;
+			border-right: 0px solid #eee;
+			border-bottom: 0px solid #eee;
+			background-color: white;
+		}
+		
+		.mui-table-view-cell > a:not(.mui-btn).mui-active {
+			background-color: #fff;
+		}
+		
+		.mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-body {
+			font-size: 13px;
+			line-height: 15px;
+			display: block;
+			width: 100%;
+			height: 15px;
+			margin-top: 8px;
+			text-overflow: ellipsis;
+			color: #666;
+		}
+		
+		.mui-table-view:before{
+			height: 0;
+		}
+		
+	</style>
+	</head>
+	<body>
+
+		<div class="mui-content">
+		    <div class="shezhi-a">
+		    	<header class="mui-bar mui-bar-nav">
+ 				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+ 				<h1 class="mui-title">我的个人中心</h1>
+				</header>
+
+
+	<!--	<ul class="mui-table-view" style="margin: 0px;padding: 0px;">
+		    	     <!--<li class="mui-table-view-cell">
+		    	            <a id="page_login" class="mui-navigate-right">
+	    	                	查看个人中心
+		    	            </a>
+		    	        </li>
+		    	      
+		    	 </ul>-->
+		    	 
+
+
+		    	 
+<div class="mui-content" id="account" style="margin: 0px;">
+ <ul class="mui-table-view mui-table-view-chevron" style="margin:0px;" >
+ 	  <li class="mui-table-view-cell" style="margin: 0px;">
+		    	            <a id="aboutBYSJ" class="mui-navigate-right">
+	    	                 	关于课题
+		    	            </a>
+		    	        </li>
+  <li class="mui-table-view-cell mui-media">
+  <a class="mui-navigate-right" id="userImg"  href="#">头像</a>
+    <img id="userImgI" src="" style="width: 100x;height:100px;"/>
+   <div class="mui-media-body">
+    Hello 用户:{{username}}
+    <p class='mui-ellipsis'>欢迎您！</p>
+   </div>
+   
+
+  </li>
+ </ul>
+ 
+<ul id="me-tableview-id" class="mui-table-view" style="margin-top:0px;">
+			<li class="mui-table-view-cell">
+				<a id="myinfo" class="mui-navigate-right">
+					<img  src="../../img/me/me_list_icon1.png" class="list-icon">
+					<div class="list-title">我的个人信息</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a id="cmandnt" class="mui-navigate-right">
+					<img src="../../img/me/me_list_icon2.png" class="list-icon">
+					<div class="list-title">评论公告</div>
+					<span id="new-msgnumber-id" class="mui-badge mui-badge-danger" style="display: none; padding: 2px 8px;"></span>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a  id="mycollect" class="mui-navigate-right">
+					<img src="../../img/me/me_list_icon3.png" class="list-icon">
+					<div class="list-title">我的收藏</div>
+				</a>
+			</li>
+				<li class="mui-table-view-cell">
+				<a  id="myrecommend" class="mui-navigate-right">
+					<img src="../../img/me/recommend .png" class="list-icon">
+					<div class="list-title">我的推荐</div>
+				</a>
+			</li>
+	
+			<li class="mui-table-view-cell">
+				<a  id="myhistory" class="mui-navigate-right">
+					<img src="../../img/me/myhistroy.png" class="list-icon">
+					<div class="list-title">历史记录</div>
+				</a>
+			</li>
+	
+ 
+ <ul class="mui-table-view" style="margin-top:20px;">
+  <li class="mui-table-view-cell" style="text-align: center;">
+   <a id="logoff">退出登录</a>
+  </li>
+ </ul>
+</div>
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+		    	 
+    <!--	    <div class="zhuce-btn mui-table-view-cell" id="tuichu">
+		    			<button>退出</button>
+		  	</div>-->
+		    <!--</div>
+	<script>
+		//启用双击监听
+		 //启用双击监听
+/*
+	document.getElementById('tuichu').addEventListener('tap', function(){
+  localStorage.removeItem('user_id');	
+   localStorage.removeItem('readerid');
+   localStorage.removeItem('head');
+   localStorage.removeItem('head');
+   var size=localStorage.getItem('localhistorysize');
+   localStorage.removeItem('historysizenews');
+   for(i =0; i<size; i++){
+			localStorage.removeItem('historynews'+i.toString());
+   }
+     localStorage.removeItem('historysizepics');
+   for(i =0; i<size; i++){
+			localStorage.removeItem('historypics'+i.toString());
+   }
+       localStorage.removeItem('historysizevideo');
+   for(i =0; i<size; i++){
+			localStorage.removeItem('historyvideo'+i.toString());
+   }
+   
+   
+  
+   
+	});
+	*/
+	document.getElementById('aboutBYSJ').addEventListener('tap', function(){
+		mui.openWindow({
+		url : "BYSJ.html",
+		id : 'BYSJ'
+	});
+	});
+		
+		//我的
+document.getElementById('page_login').addEventListener('tap', function(){
+function checkLogin(){
+	var nick=localStorage.getItem('user_id');
+	if(!nick){
+		mui.openWindow({
+		url : "../login/login.html",
+		id : 'login'
+	});
+	return false;	
+	}
+	return [nick];
+}
+	var LoginRes = checkLogin();
+	if(!LoginRes){return false;}
+	//进入我的页面
+	mui.openWindow({
+		url : "myself.html",
+		id : 'myself'
+	});
+});
+
+
+	</script>
+
+	</body>
+</html>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="../../js/mui.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script type="text/javascript">
+////初始化会员信息
+  mui.init({
+        beforeback: function() {　　 
+            //获得父页面的webview
+            var list = plus.webview.currentWebview().opener();　　
+            //触发父页面的自定义事件(refresh),从而进行刷新
+            mui.fire(list, 'refresh');
+            //返回true,继续页面关闭逻辑
+            return true;
+        }
+    });
+
+var userObj = new Vue({
+	el : "#account",
+	data : {
+		username : '',
+	}
+});
+
+mui.plusReady(function(){
+
+/*	(function($, doc) {
+    window.addEventListener('refresh', function(e) {
+        //执行刷新
+        console.log("刷新父页面")
+        location.reload();
+    });
+})(mui, document);*/
+	window.addEventListener('refresh', function(e){//执行刷新
+    location.reload();
+});
+
+	
+	document.getElementById('userImg').addEventListener('tap',function(){
+        if(mui.os.plus){
+            var a=[{
+                title:'拍照'
+            },{
+                title:'从手机相册选择'
+            }];
+            plus.nativeUI.actionSheet({
+                title:'修改头像',
+                cancel:'取消',
+                buttons:a
+            },function(b){
+                switch(b.index){
+                    case 0:
+                        break;
+                    case 1:
+                        //拍照
+                        getImages();
+                        break;
+                    case 2:
+                        //打开相册
+                        galleryImages();
+                        break;
+                    default:
+                        break;
+                }
+            },false);   
+        }
+    });
+
+    //拍照
+    function getImages(){
+        var mobileCamera=plus.camera.getCamera();
+        mobileCamera.captureImage(function(e){
+            plus.io.resolveLocalFileSystemURL(e,function(entry){
+                var path=entry.toLocalURL();
+                console.log(path);
+                uploadHeadImg(path);
+            },function(err){
+                console.log("读取拍照文件错误");
+            });
+        },function(e){
+            console.log("er",err);
+        },function(){
+            filename:'_doc/head.png';
+        });
+    }
+
+    //从本地相册选择
+    function galleryImages(){
+        console.log("你选择了从相册选择");
+        plus.gallery.pick(function(a){
+            plus.io.resolveLocalFileSystemURL(a,function(entry){
+                plus.io.resolveLocalFileSystemURL('_doc/',function(root){
+                    root.getFile('head.png',{},function(file){
+                        //文件已经存在
+                        file.remove(function(){
+                            console.log("文件移除成功");
+                            entry.copyTo(root,'head.png',function(e){
+                                var path=e.fullPath;
+                                uploadHeadImg(path);
+                            },function(err){
+                                console.log("copy image fail: ",err);
+                            });
+                        },function(err){
+                            console.log("删除图片失败：（"+JSON.stringify(err)+")");
+                        });
+                    },function(err){
+                        //打开文件失败
+                        entry.copyTo(root,'head.png',function(e){
+                            var path=e.fullPath;
+                            uploadHeadImg(path);
+                        },function(err){
+
+                            console.log("上传图片失败：（"+JSON.stringify(err)+")");
+                        });
+                    });
+                },function(e){
+                    console.log("读取文件夹失败：（"+JSON.stringify(err)+")");
+                });
+            });
+        },function(err){
+            console.log("读取拍照文件失败: ",err);
+        },{
+            filter:'image'
+        });
+    };
+
+    //上传图片
+    function uploadHeadImg(imgPath){
+        //选中图片之后，头像当前的照片变为选择的照片
+        
+		 var image=new Image();
+        image.src=imgPath;
+		   image.onload = function() { 
+              var imgData = getBase64Image(image); 
+              var nick=localStorage.getItem('user_id');
+              var readerid=localStorage.getItem('readerid');
+              console.log(imgData);
+     		 /*在这里调用上传接口*/  
+			  mui.ajax('http://192.168.5.3:8080/students323/uploadHeadImg',{
+            data:{
+                'imgData':imgData,
+                'nick':nick,
+                'readerid':readerid
+            },
+            dataType:'json',//服务器返回json格式数据
+            type:'post',//HTTP请求类型
+            timeout:10000,//超时时间设置为10秒；
+            success:function(data){
+            	console.log(JSON.stringify(data));
+            
+                var head=data.head 
+                   localStorage.removeItem('head');
+                   localStorage.setItem('head',data.head);
+        
+        var mainImg=document.getElementById('userImgI');
+        mainImg.src="https://xiaoliwaer.top:525/headerimg/"+localStorage.getItem('head');
+/*         	 var wobj = plus.webview.getWebviewById('myself');
+//					if(wobj!=null){
+   					wobj.reload(true);
+//					}*/
+					   mui.alert('上传成功！');
+         console.log(mainImg.src);
+
+            },
+            error:function(xhr,type,errorThrown){
+                if(type=='timeout'){
+                    mui.alert('服务器连接超时，请稍后再试');
+                }   
+          	} 
+        });
+    }
+}
+       
+	//将图片压缩转成base64 
+	function getBase64Image(img) { 
+	    var canvas = document.createElement("canvas"); 
+	    var width = img.width; 
+	    var height = img.height; 
+	    // calculate the width and height, constraining the proportions 
+	    if (width > height) { 
+	        if (width > 100) { 
+	            height = 100; 
+	            width = 100; 
+	        } 
+	    } else { 
+	        if (height > 100) { 
+	            width = 100; 
+	            height = 100; 
+	        } 
+	    } 
+	    canvas.width = width;   /*设置新的图片的宽度*/ 
+	    canvas.height = height; /*设置新的图片的长度*/ 
+	    var ctx = canvas.getContext("2d"); 
+	    ctx.drawImage(img, 0, 0, width, height); /*绘图*/  
+	    var dataURL = canvas.toDataURL("image/png", 0.8);
+	    return dataURL.replace("data:image/png;base64,", ""); 
+	}    
+
+
+		function checkLogin(){
+		var nick=localStorage.getItem('user_id');
+		if(!nick){
+			mui.openWindow({
+			url : "../login/login.html",
+			id : 'login'
+		});
+		return false;	
+		}
+		return [nick];
+	}
+		
+	var checkRes = checkLogin();
+	if(checkRes){
+	console.log(localStorage.getItem('user_id'));
+	userObj.username=localStorage.getItem('user_id');
+	var mainImg=document.getElementById('userImgI');
+        mainImg.src="https://xiaoliwaer.top:525/headerimg/"+localStorage.getItem('head');
+		console.log(mainImg.src);
+	}
+	
+});
+
+
+
+document.getElementById('logoff').addEventListener('tap', function(){
+	localStorage.removeItem('user_id');	
+   localStorage.removeItem('readerid');
+   localStorage.removeItem('head');
+   localStorage.removeItem('head');
+   var size=localStorage.getItem('localhistorysize');
+   localStorage.removeItem('historysizenews');
+   for(i =0; i<size; i++){
+			localStorage.removeItem('historynews'+i.toString());
+   }
+     localStorage.removeItem('historysizepics');
+   for(i =0; i<size; i++){
+			localStorage.removeItem('historypics'+i.toString());
+   }
+        localStorage.removeItem('historysizevideo');
+   for(i =0; i<size; i++){
+			localStorage.removeItem('historyvideo'+i.toString());
+   }
+   
+   mui.openWindow({
+   		url : '../login/login.html',
+		id : 'login'
+		}
+   );
+});
+
+document.getElementById('myinfo').addEventListener('tap', function(){
+	mui.openWindow({
+		url : 'myinfo.html',
+		id : 'myinfo'
+		
+	});
+	
+});
+
+document.getElementById('mycollect').addEventListener('tap', function(){
+	mui.openWindow({
+		url : 'mycollect.html',
+		id : 'mycollect'	
+	});
+});
+
+document.getElementById('myhistory').addEventListener('tap', function(){
+	mui.openWindow({
+		url : 'localhistory.html',
+		id : 'localhistory'	
+	});
+});
+
+document.getElementById('cmandnt').addEventListener('tap', function(){
+	mui.openWindow({
+		url : 'cmandnt.html',
+		id : 'cmandnt'
+	});
+});
+document.getElementById('myrecommend').addEventListener('tap', function(){
+	mui.openWindow({
+		url : 'myrecommend.html',
+		id : 'myrecommend'
+	});
+});
+
+
+
+</script>
+</body>
+</html>

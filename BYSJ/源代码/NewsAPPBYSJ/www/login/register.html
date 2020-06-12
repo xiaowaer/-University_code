@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" href="../../css/login.css" />
+			<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/mui.min.js"></script>	
+	
+	</head>
+	<body>
+
+		<header class="mui-bar mui-bar-nav header-bg">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">注册</h1>
+		</header>
+		<!--body-->
+		<div class="mui-content login-bg">
+			
+		    <div class="zhuce">
+		    	<h1 class="zhuce-title">注册</h1>
+		    	<!--表单-->
+			    <form class="mui-input-group" action="javascript:;">
+			        <div class="mui-input-row">
+			            <label>昵称</label>
+			            <input type="text" id="nick" name="nick"  class="mui-input-clear" placeholder="请输入昵称">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>密码</label>
+			            <input type="password" id="mima" name="mima" class="mui-input-clear" placeholder="请输入密码">
+			            
+			        </div>
+			        <div class="mui-input-row">
+			            <label>确认密码</label>
+			            <input type="password"  id="mima2"  class="mui-input-clear" placeholder="请再次输入密码">
+			        </div>
+			    </form>
+		    </div>
+		    <div class="zhuce-btn">
+		    	<button id="btn" >注册</button>
+		    	<p><a id='backlogin'>登录</a></p>
+		    </div>
+		</div>
+		
+
+			
+	<script type="text/javascript">
+			  mui.init(); 
+			  document.getElementById('backlogin').addEventListener('tap', function(){
+	mui.back();
+});
+			  var input=document.getElementsByTagName('input');
+
+		var zcbtn=mui("#btn")[0];
+			zcbtn.addEventListener('tap',function(){
+				 var nick=input[0].value;;
+				var mima=input[1].value;;
+				var mima2=input[2].value;;
+				console.log(nick);
+				   if(nick==''){
+					mui.prompt("昵称不能为空");
+					return;
+				}
+				
+				if(mima==''){
+					mui.prompt("密码不能为空");
+					return;
+				}
+				
+				if(mima!=mima2){
+					mui.prompt("密码有一致");
+					return;
+				}
+				
+				mui.ajax('http://192.168.5.3:8080/students323/insertreader',{
+					data:"{\"nick\":\""+nick+"\",\"mima\":\""+mima+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+								 if(data.result=="ok"){
+                       			 mui.toast('注册成功');
+                  
+                      
+           
+                setTimeout(function(){
+					plus.webview.currentWebview().close();
+					plus.webview.getWebviewById('login').close();
+					  mui.openWindow({
+                      url: 'login.html',
+                      id: 'login'
+                  });
+				},2000);
+                      
+                      
+                    }
+					if(data.result=="no"){
+                        	       mui.toast('注册已经存在');
+                       }
+								},
+									error:function(xhr,type,errorThrown){
+										//异常处理；
+										console.log(type);
+									}
+						});
+
+			});		
+						</script>
+
+		
+		
+
+	</body>
+</html>

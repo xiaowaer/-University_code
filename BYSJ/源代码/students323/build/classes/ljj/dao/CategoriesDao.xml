@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+              
+  <mapper namespace="ljj.dao.CategoriesDao">
+  <resultMap id="CategoriesList" type="Categories">
+    <id column="cid" property="cid"/>
+    <result column="chname" property="chname"/>
+    <result column="ename" property="ename"/> 
+    <result column="origin" property="origin"/>      
+  </resultMap>
+  
+
+  
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(*) from categories
+    </select>
+  
+
+<!--分页查询-->
+    <select id="getcategoriesList" parameterType="Categories" resultType="Categories">
+        select *from categories
+        ORDER BY  cid asc
+        limit #{currentPage},#{pageSize}
+    </select>
+      
+    <delete id="deleteCategories" parameterType="String" >
+        delete  from categories where cid=#{cid} 
+    </delete>
+  
+  <select resultMap="CategoriesList" id="findAllnewScategories">select cid,chname,ename,origin from categories where origin = 'txnews'</select>
+  <select resultMap="CategoriesList" id="findAllvideoScategories">select cid,chname,ename,origin from categories where origin = 'hksp'</select>
+  <select resultMap="CategoriesList" id="findAllpicsScategories">select cid,chname,ename,origin from categories where origin = 'xltp'</select>
+    <select resultMap="CategoriesList" id="findAllcategories">select cid,chname,ename,origin from categories </select>
+    <select resultType="Categories" id="showVideoCate">select cid,chname,ename,origin from categories where origin = 'hksp'</select>
+    <select resultType="Categories" id="showPicsCate">select cid,chname,ename,origin from categories where origin = 'xltp'</select>
+     <select resultType="Categories" id="showNewsCate">select cid,chname,ename,origin from categories where origin = 'txnews'</select>
+ <select resultType="Categories" id="findCtype">select cid,chname,ename,origin from categories where cid = #{cid}</select>
+</mapper>

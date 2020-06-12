@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ljj.dao.ReaderActionDao" >
+
+
+
+    <insert id="addCollects" parameterType="String" >
+        insert into readeraction (actor,pageurl,collect)
+        values(#{actor},#{pageurl},"yes")     
+    </insert>
+    
+    <insert id="insertZan" parameterType="String" >
+        insert into readeraction (actor,pageurl,callzan)
+        values(#{actor},#{pageurl},"yes")     
+    </insert>
+  
+   <!--分页查询-->
+    <select id="getReaderActionList" parameterType="ReaderAction" resultType="ReaderAction">
+        select *from readeraction where actor=#{actor} and  collect='yes' ORDER BY actionid asc limit #{currentPage},#{pageSize}
+    </select>
+    
+
+    <select id="totalCount"  resultType="Integer">
+        select count(actionid) from readeraction where actor=#{actor} and collect='yes'
+    </select>
+    
+    
+    <select id="findAction" parameterType="String" resultType="ReaderAction">
+        select *from readeraction where actor=#{actor} and pageurl=#{pageurl}
+    </select>
+
+<update id="updateCollects" parameterType="String" >
+      update readeraction
+        <set>
+            collect="yes",
+        </set>
+        where actor=#{actor} and pageurl=#{pageurl}
+</update>
+
+
+<update id="updateZan" parameterType="String" >
+      update readeraction
+        <set>
+            callzan="yes",
+        </set>
+        where actor=#{actor} and pageurl=#{pageurl}
+</update>
+
+<update id="deleteCollects" parameterType="String" >
+      update readeraction
+        <set>
+            collect="no",
+        </set>
+        where actor=#{actor} and pageurl=#{pageurl}
+</update>
+  
+<update id="deleteZan" parameterType="String" >
+      update readeraction
+        <set>
+            callzan="no",
+        </set>
+        where actor=#{actor} and pageurl=#{pageurl}
+</update>
+  
+      <delete id="deleteActionBytarget" parameterType="String" >
+        delete  from readeraction where pageurl=#{pageurl}
+    </delete>
+  
+        <delete id="deleteActionByreader" parameterType="String" >
+        delete  from readeraction where actor=#{actor}
+    </delete>
+  
+
+</mapper>

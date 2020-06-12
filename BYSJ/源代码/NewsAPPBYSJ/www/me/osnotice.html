@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+			<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">通知</h1>
+	</header>
+<div style="height:50px; line-height:50px; padding:0px 10px;">
+</div>
+	
+	<div id="noticeList">
+	<div class="comments" v-for="items in noticesList" style="padding:5px;margin:5px;border:2px solid #000;;">
+		<div class="comments-face" >
+			<img v-bind:src="img" style="height:30px;"/>
+			<b style="text-align: center;">发布人：{{items.publisher}}</b><br />
+		</div>
+		<div class="comments-content">
+			
+			
+			<div class="mui-content" >
+				<h3>{{items.noticetitle}}</h3>
+			</div>
+			
+			<div class="mui-content" v-html="items.noticecontent"></div>
+   			<span>{{items.publishtime | moment}}</span>
+
+		</div>
+</div>	
+
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script src="../../js/moment.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+	var noticesObj = new Vue({
+	el : "#noticeList",
+	data : {
+		noticesList : [],
+		img:'',
+	},
+});
+
+
+
+
+
+mui.plusReady(function(){
+
+	Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+	
+function getnotices(){
+
+	mui.getJSON(
+	'http://192.168.5.3:8080/students323/shownotices',
+	function(res){
+	console.log(JSON.stringify(res));
+	noticesObj.noticesList = res.data;
+	noticesObj.img =res.img;
+	}
+);
+}
+
+getnotices();
+	
+});
+
+		</script>
+	</body>
+
+</html>

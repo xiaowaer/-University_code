@@ -1,0 +1,274 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+.mui-content{padding:10px; line-height:1.8em; color:#222222;}
+.mui-content img{width:100%;}
+.mui-content *{color:#222222; font-size:16px;}
+
+.comments{padding:8px; background:#FFFFFF; margin-bottom:1px; display:flex;}
+.comments-face{width:38px; flex-shrink:0;}
+.comments-face img{width:100%;}
+.comments-content{line-height:1.6em; font-size:14px; padding:0px 10px; width:100%;}
+.comments-content span{font-size:10px; color:#6D6D72;}
+.comments-content b{font-weight:400; font-size:15px; color:#6641E2;}
+.footer-line{height:60px;}
+#footer{width:100%; height:50px; position:fixed; z-index:9; left:0; bottom:0; background:#F7F7F7; display:flex; border-top:1px solid #DDDDDD;}
+.footer-input{width:100%; height:30px; margin:9px 5px;}
+.footer-submit{width:50px; height:30px;  border:1px solid #ACACB4;
+border-radius:3px; font-size:14px; margin:9px 5px; text-align:center; flex-shrink:0;}
+#footer textarea{height:30px; line-height:20px; width:100%; font-size:14px; padding:0px 8px;}
+
+
+.replybtn{
+	width: 80%;
+	margin: 0 auto;
+	margin-top: 20px;
+	/*padding: 0 20px;*/
+}
+
+.replybtn button{
+	background: #F1948A ;
+	border: 0;
+	width: 100%;
+	color: #fff;
+	padding: 10px 0;
+	
+}
+
+.replybtn p{
+	text-align: center;
+	margin: 40px 0 0;
+	color: #ccc;
+	font-size: 12px;
+}
+
+.replybtn a{
+	color: #b848ff;
+	font-size: 20px;
+	text-decoration: underline;
+}
+</style>
+
+	</head>
+
+	<body>
+	<div id="main">
+		
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">查看回复</h1>
+	</header>
+
+
+	<div style="height:50px; line-height:50px; padding:0px 10px;">
+	
+	</div>
+		<div class="comments" >
+	<div class="comments-face"><img v-bind:src="thiscmhead" /></div>
+		<div class="comments-content">
+			<b>{{thiscmnick}}</b><br />
+			{{thiscmcontent}}<br />
+		</div>
+</div>
+
+	<div style="line-height:50px; text-align:center; color:#8F8F94;" v-bind:hidden="commentsLoadingHide">
+		{{commentsLoading}}
+	</div>
+	
+
+<div style="height:10px; line-height:50px; padding:0px 10px;">
+	
+	</div>
+	
+	<div class="comments" v-for="items in comments">
+		<div class="comments-face"><img v-bind:src="items.cmhead" /></div>
+		<div class="comments-content">
+			<b>{{items.commenter}}</b><br />
+			{{items.cmcontent}}<br />
+   			<span>{{items.cmtime | moment}}</span>
+   		 <div class="replybtn"  @click="showReply(items.commentid,items.cmhead,items.cmcontent,items.commenter);">
+		    	<button id="chakanhuifu">查看回复</button>
+		    </div>
+		</div>
+		
+		</div>
+	</div>
+	
+	</div>
+
+	
+	
+	
+	<div class="footer-line"></div>
+
+<div id="footer">
+	<div class="footer-input">
+		<textarea id="submitContent"></textarea>
+ 	</div>
+ 	<button  type="button" class="footer-submit" id="submitBtn" style="font-size: 20px;text-align:center;padding:0;">提交</button>
+</div>
+
+	
+
+
+	
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/moment.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+<script type="text/javascript">
+
+	var commentid;
+	var thiscmcontent;
+	var thiscmhead;
+	var thiscmnick;
+			
+	
+		mui.init()
+var artObj = new Vue({
+	el : '#main',
+	data : {
+		art : [],
+		thiscmhead: '',
+		thiscmcontent:'',
+		thiscmnick:'',
+		commentsLoading : '回复加载中',
+		comments : [],
+		commentsLoadingHide : false	
+	},
+	methods : {
+			showReply:function(commentid,thiscmhead,thiscmcontent,thiscmnick){
+//			alert(commentid);
+			console.log(commentid);
+			console.log(thiscmcontent);
+			console.log("thiscmcontent");
+				mui.openWindow({
+				url : "reply.html",
+				id : 'reply',
+				extras : {commentid : commentid,thiscmhead:thiscmhead,thiscmcontent:thiscmcontent,thiscmnick:thiscmnick,},
+				createNew:true,
+				});
+		}
+	}
+	
+});
+
+mui.plusReady(function(){
+var isImmersedStatusbar = plus.navigator.isImmersedStatusbar();
+	if(isImmersedStatusbar){
+		var StatusbarHeight = plus.navigator.getStatusbarHeight();
+		var header = document.querySelectorAll('header');
+		header[0].style.height = (StatusbarHeight + 44) + 'px';
+		header[0].style.paddingTop = StatusbarHeight + 'px';
+		var mian = document.querySelectorAll('.mui-content');
+		if(mian.length >= 1){
+			mian[0].style.paddingTop = (44 + StatusbarHeight) + 'px';
+		}
+	}
+	
+	var _self = plus.webview.currentWebview();
+	commentid = _self.commentid;
+	thiscmcontent = _self.thiscmcontent;
+	thiscmhead = _self.thiscmhead;
+	thiscmnick = _self.thiscmnick;
+	console.log(commentid);
+	console.log(thiscmcontent);
+	console.log(thiscmhead);
+	console.log(thiscmnick);
+	artObj.thiscmhead=thiscmhead;
+	artObj.thiscmnick=thiscmnick;
+	artObj.thiscmcontent =thiscmcontent;
+	
+	//加载评论
+	
+	Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+	
+
+function getComments(){
+	console.log("提交回复请求");
+	mui.getJSON(
+		'http://192.168.5.3:8080/students323/loadingReplyforparent?parent='+commentid,
+		{},
+		function(res){
+			console.log(JSON.stringify(res))
+			if(res.status == 'ok'){
+					artObj.comments = res.data;
+				//将loading 隐藏
+				artObj.commentsLoadingHide = true;
+			}else{
+				artObj.commentsLoading = '暂无回复';
+			}
+			
+		}
+	);
+}
+getComments();
+
+	document.getElementById("submitBtn").addEventListener('tap', function(){
+	var submitContent = document.getElementById('submitContent').value;
+	console.log(submitContent.length);
+	if(submitContent.length < 2){
+		mui.toast('评论内容至少2个字符');
+		return false;
+	}
+	
+	function checkLogin(){
+	var nick=localStorage.getItem('user_id');
+	var readerid=localStorage.getItem('readerid');
+	var head = localStorage.getItem('head');
+	if(!nick){
+	mui.toast('请登陆');	
+	return false;	
+	}
+	return [nick,readerid,head];
+}
+	var LoginRes = checkLogin();
+	if(!LoginRes){return false;}
+	
+	var userid=LoginRes[1];
+	var commenter=LoginRes[0];
+	var cmhead="https://xiaoliwaer.top:525/headerimg/"+LoginRes[2] 
+	var parent = commentid;
+	var cmcontent = submitContent;
+	
+	console.log(submitContent);
+	console.log(parent);
+	console.log(userid);
+	document.getElementById('submitContent').value="";
+	
+		mui.ajax('http://192.168.5.3:8080/students323/insertreply',{
+					data:"{\"userid\":\""+userid+"\",\"parent\":\""+parent+"\",\"cmcontent\":\""+cmcontent+"\",\"cmhead\":\""+cmhead+"\",\"commenter\":\""+commenter+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+								 if(data.result=="ok"){
+                     			 mui.toast('回复成功');   
+                     			 getComments();
+                  }
+					if(data.result=="false"){
+                     	       mui.toast('回复失败');
+                    }
+								},
+									error:function(xhr,type,errorThrown){
+									//异常处理；
+										console.log(type);
+									}
+		});
+});
+	
+});
+		</script>
+	</body>
+
+</html>

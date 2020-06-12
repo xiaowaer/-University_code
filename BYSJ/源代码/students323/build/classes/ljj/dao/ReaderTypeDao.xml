@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+ <mapper namespace="ljj.dao.ReaderTypeDao">
+ 
+  <resultMap id="ReaderTypeList" type="ReaderType">
+    <result column="readertype" property="readertype"/>      
+  </resultMap>
+
+ <insert id="insertReaderType" parameterType="ReaderType" >
+        insert into readertype(readertype,readerid,priority,level)
+        values(#{readertype},#{readerid},#{priority},#{level})
+    </insert>
+    
+     <select id="findReadtypeById"  parameterType="Integer" resultType="ReaderType" >
+       select * from readertype where readerid=#{readerid}
+    </select>
+    
+        <update id="updateReaderType" parameterType="ReaderType" >
+        update readertype
+        <set>
+            <if test="priority!= null">priority=#{priority},</if>
+            <if test="level!= null">level =#{level},</if>
+            <if test="readertype!= null">readertype=#{readertype},</if>     
+        </set>
+        where readerid=#{readerid}
+</update>
+    
+    <select resultMap="ReaderTypeList" id="showReaderType">select  DISTINCT readertype from readertype </select>
+
+</mapper>

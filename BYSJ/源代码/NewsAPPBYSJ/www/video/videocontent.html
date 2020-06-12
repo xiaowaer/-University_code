@@ -1,0 +1,524 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+				<link rel="stylesheet" href="../../css/icons-extra.css">
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<style type="text/css">
+.mui-content{padding:10px; line-height:1.8em; color:#222222;}
+.mui-content img{width:100%;}
+.mui-content *{color:#222222; font-size:16px;}
+
+.comments{padding:8px; background:#FFFFFF; margin-bottom:1px; display:flex;}
+.comments-face{width:38px; flex-shrink:0;}
+.comments-face img{width:100%;}
+.comments-content{line-height:1.6em; font-size:14px; padding:0px 10px; width:100%;}
+.comments-content span{font-size:10px; color:#6D6D72;}
+.comments-content b{font-weight:400; font-size:15px; color:#6641E2;}
+.footer-line{height:60px;}
+#footer{width:100%; height:50px; position:fixed; z-index:9; left:0; bottom:0; background:#F7F7F7; display:flex; border-top:1px solid #DDDDDD;}
+.footer-input{width:100%; height:30px; margin:9px 5px;}
+.footer-submit{width:50px; height:30px;  border:1px solid #ACACB4;
+border-radius:3px; font-size:14px; margin:9px 5px; text-align:center; flex-shrink:0;}
+#footer textarea{height:30px; line-height:20px; width:100%; font-size:14px; padding:0px 8px;}
+
+
+.replybtn{
+	width: 80%;
+	margin: 0 auto;
+	margin-top: 20px;
+	/*padding: 0 20px;*/
+}
+
+.replybtn button{
+	background: #F1948A ;
+	border: 0;
+	width: 100%;
+	color: #fff;
+	padding: 10px 0;
+	
+}
+
+.replybtn p{
+	text-align: center;
+	margin: 40px 0 0;
+	color: #ccc;
+	font-size: 12px;
+}
+
+.replybtn a{
+	color: #b848ff;
+	font-size: 20px;
+	text-decoration: underline;
+}
+
+</style>
+
+	</head>
+
+	<body>
+		<div id="main">
+	<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+
+		<h1 class="mui-title">视频详情</h1>
+		<a id="share" class="mui-icon-extra mui-icon-extra-share mui-pull-right"></a>
+		
+	</header>
+	<div class="mui-content" >
+		<video width="100%" v-bind:src="videourl" controls="controls">
+		    </video>
+
+	</div>
+	
+	<div style="margin-left: 70PX;">
+	<div style="width:115px; height:35px; line-height:35px; border:1px solid #D1D1D1; border-radius:3px; margin:0 auto; text-align:center;display: inline-block;" id="collectNow">
+		<a id="icon-star" style="color:#666666; font-size:14px;">
+			<span class="mui-icon mui-icon-star"></span> 
+			<span id="collectText">收藏文章</span>
+		</a>
+	</div>
+	
+	<div style=" width:115px; height:35px; line-height:35px; border:1px solid #D1D1D1; border-radius:3px; margin:10px auto; text-align:center;display: inline-block;" id="zanNow">
+		<a id="icon-zan" style="color:#666666; font-size:14px;">
+			<span class="mui-icon-extra mui-icon-extra-like"></span> 
+			<span id="zanText">未点赞</span>
+		</a>
+	</div>
+	</div>
+	
+	<div style="height:50px;text-align: center; line-height:50px; padding:0px 10px;">
+		相关评论
+	</div>
+	
+	<div style="line-height:50px; text-align:center; color:#8F8F94;" v-bind:hidden="commentsLoadingHide">
+		{{commentsLoading}}
+	</div>
+	
+	<div class="comments" v-for="items in comments">
+		<div class="comments-face"><img v-bind:src="items.cmhead" /></div>
+		<div class="comments-content">
+			<b>{{items.commenter}}</b><br />
+			{{items.cmcontent}}<br />
+   			<span>{{items.cmtime | moment}}</span>
+   		 <div class="replybtn"  @click="showReply(items.commentid,items.cmhead,items.cmcontent,items.commenter,);">
+		    	<button id="chakanhuifu">查看回复</button>
+		    </div>
+		</div>
+		</div>
+	</div>
+</div>
+
+	
+	
+	
+	<div class="footer-line"></div>
+
+
+<div id="footer">
+	<div class="footer-input">
+		<textarea id="submitContent"></textarea>
+ 	</div>
+ 	<button  type="button" class="footer-submit" id="submitBtn" style="font-size: 20px;text-align:center;padding:0;">提交</button>
+</div>
+
+	
+	
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/moment.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+			
+<script type="text/javascript">
+	 //分享操作 
+        var shares = {};
+        
+	var videooriginurl;var videoname;var videokeyword;var videoid;
+				mui.init({
+    beforeback: function() {
+　　　　 //获得父页面的webview
+        var list = plus.webview.currentWebview().opener();
+　　　　 //触发父页面的自定义事件(refresh),从而进行刷新
+        mui.fire(list, 'refresh');
+        //返回true,继续页面关闭逻辑
+        return true;
+    }
+});
+	
+var videoObj = new Vue({
+	el : '#main',
+	data : {
+		videourl :'',
+		video : [],
+		commentsLoading : '评论加载中',
+		comments : [],
+		commentsLoadingHide : false	
+	},
+		methods : {
+		showReply:function(commentid,thiscmhead,thiscmcontent,thiscmnick){
+//			alert(commentid);
+			console.log(commentid);
+			console.log(thiscmcontent);
+			console.log("thiscmcontent");
+				mui.openWindow({
+				url : "../news/reply.html",
+				id : 'reply',
+				extras : {commentid : commentid,thiscmhead:thiscmhead,thiscmcontent:thiscmcontent,thiscmnick:thiscmnick,}
+			});
+		}
+	}
+});
+
+
+
+
+
+mui.plusReady(function(){
+var isImmersedStatusbar = plus.navigator.isImmersedStatusbar();
+	if(isImmersedStatusbar){
+		var StatusbarHeight = plus.navigator.getStatusbarHeight();
+		var header = document.querySelectorAll('header');
+		header[0].style.height = (StatusbarHeight + 44) + 'px';
+		header[0].style.paddingTop = StatusbarHeight + 'px';
+		var mian = document.querySelectorAll('.mui-content');
+		if(mian.length >= 1){
+			mian[0].style.paddingTop = (44 + StatusbarHeight) + 'px';
+		}
+	}
+	
+		Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+	
+	var _self = plus.webview.currentWebview();
+	videoObj.videourl = _self.videooriginurl;
+	videooriginurl = _self.videooriginurl;
+	videoid=_self.videoid;
+	target="v"+videoid;
+	videoname = _self.videoname;
+	videokeyword = _self.videokeyword;
+	console.log(videoObj.videourl);
+	
+	function getComments(){
+	console.log("提交评论请求");
+//	console.log(Newsurl);
+	mui.getJSON(
+		'http://192.168.5.3:8080/students323/loadingCommentfortarget?target='+target,
+		{},
+		function(res){
+			console.log(JSON.stringify(res))
+			if(res.status == 'ok'){
+				 videoObj.comments = res.data;
+				//将loading 隐藏
+				 videoObj.commentsLoadingHide = true;
+			}else{
+				 videoObj.commentsLoading = '暂无评论';
+			}
+			
+		}
+	);
+}
+getComments();
+
+document.getElementById("submitBtn").addEventListener('tap', function(){
+	var submitContent = document.getElementById('submitContent').value;
+	console.log(submitContent.length);
+	if(submitContent.length < 2){
+		mui.toast('评论内容至少2个字符');
+		return false;
+	}
+	
+	function checkLogin(){
+	var nick=localStorage.getItem('user_id');
+	var readerid=localStorage.getItem('readerid');
+	var head = localStorage.getItem('head');
+	if(!nick){
+	mui.toast('请登陆');	
+	return false;	
+	}
+	return [nick,readerid,head];
+}
+	var LoginRes = checkLogin();
+	if(!LoginRes){return false;}
+	
+	var userid=LoginRes[1];
+	var commenter=LoginRes[0];
+	var cmhead="https://xiaoliwaer.top:525/headerimg/"+LoginRes[2] 
+	var target = "v"+videoid;
+	var cmcontent = submitContent;
+	
+	console.log(submitContent);
+	console.log(target);
+	console.log(userid);
+	document.getElementById('submitContent').value="";
+		mui.ajax('http://192.168.5.3:8080/students323/insertcomment',{
+					data:"{\"userid\":\""+userid+"\",\"target\":\""+target+"\",\"cmcontent\":\""+cmcontent+"\",\"cmhead\":\""+cmhead+"\",\"commenter\":\""+commenter+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+								 if(data.result=="ok"){
+                     			 mui.toast('评论成功');   
+                     			 getComments(); }
+					if(data.result=="false"){
+                     	       mui.toast('评论失败');
+                   }},
+									error:function(xhr,type,errorThrown){
+									//异常处理；
+										console.log(type);
+									}});
+
+});
+	
+	mui.getJSON(
+		'http://192.168.5.3:8080/students323/findnewscontentbyurl?newsurl='+target,
+		function(res){
+			videoObj.video = res.data;
+			console.log(JSON.stringify(res));
+			
+		}
+	);
+	
+	
+	function checkLogin(){
+	var nick=localStorage.getItem('user_id');
+	var readerid=localStorage.getItem('readerid');
+	var head = localStorage.getItem('head');
+	if(!nick){
+	mui.toast('请登陆');	
+	return false;	
+	}
+	return [nick,readerid,head];
+}	
+var LoginRes = checkLogin();
+	if(LoginRes)
+	{
+		var actor=localStorage.getItem('user_id');
+		var readerid=localStorage.getItem('readerid');
+		var pageurl = "v"+videoid;
+		console.log("collectZX" );
+		console.log(pageurl);
+		console.log(readerid);
+		console.log(actor);
+		var pageIndex=1;
+	mui.ajax('http://192.168.5.3:8080/students323/CollectsZX',{
+					data:"{\"actor\":\""+actor+"\",\"pageurl\":\""+pageurl+"\",\"pageIndex\":\""+pageIndex+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+								 if(data.Cstatus=="yes"){	 	
+					document.getElementById('collectText').innerHTML = '已收藏';
+					document.getElementById('icon-star').style.color = '#FF4500';
+							
+								 }
+							if(data.Zstatus=="yes"){	 	
+					document.getElementById('zanText').innerHTML = '已点赞';
+					document.getElementById('icon-zan').style.color = '#FF4500';
+							
+								 }
+								},
+									error:function(xhr,type,errorThrown){
+									//异常处理；
+										console.log(type);
+									}});}
+	
+	
+	
+	//点击收藏按钮
+document.getElementById('collectNow').addEventListener('tap', function(){
+	var txt = document.getElementById('collectText').innerHTML;
+	var checkRes = checkLogin();
+	if(!checkRes){return false;}
+	console.log("点击了收藏按钮");
+		var actor=localStorage.getItem('user_id');
+		var readerid=localStorage.getItem('readerid');
+		var pageurl = "v"+videoid;
+	//添加收藏
+	if(txt != '已收藏'){
+		mui.ajax('http://192.168.5.3:8080/students323/AddCollects',{
+					data:"{\"actor\":\""+actor+"\",\"pageurl\":\""+pageurl+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+				if(data.result=="ok"){
+					document.getElementById('collectText').innerHTML = '已收藏';
+					document.getElementById('icon-star').style.color = '#FF4500';
+								
+								 }
+								},
+									error:function(xhr,type,errorThrown){
+									//异常处理；
+										console.log(type);
+									}});
+	}else{
+		mui.ajax('http://192.168.5.3:8080/students323/deleteCollects',{
+					data:"{\"actor\":\""+actor+"\",\"pageurl\":\""+pageurl+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+				if(data.result=="ok"){
+					document.getElementById('collectText').innerHTML = '收藏文章';
+					document.getElementById('icon-star').style.color = '#666666';
+								
+								 }
+								},
+									error:function(xhr,type,errorThrown){
+									//异常处理；
+										console.log(type);
+									}});
+	}
+});
+
+//点击收藏按钮
+document.getElementById('zanNow').addEventListener('tap', function(){
+	var txt = document.getElementById('zanText').innerHTML;
+	var checkRes = checkLogin();
+	if(!checkRes){return false;}
+	console.log("点击点赞按钮");
+		var actor=localStorage.getItem('user_id');
+		var readerid=localStorage.getItem('readerid');
+		var pageurl = "v"+videoid;
+	//添加收藏
+	if(txt != '已点赞'){
+		mui.ajax('http://192.168.5.3:8080/students323/Callzan',{
+					data:"{\"actor\":\""+actor+"\",\"pageurl\":\""+pageurl+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+				if(data.result=="ok"){
+					document.getElementById('zanText').innerHTML = '已点赞';
+					document.getElementById('icon-zan').style.color = '#FF4500';
+								
+								 }
+								},
+									error:function(xhr,type,errorThrown){
+									//异常处理；
+										console.log(type);
+									}});
+	}else{
+		mui.ajax('http://192.168.5.3:8080/students323/deleteZan',{
+					data:"{\"actor\":\""+actor+"\",\"pageurl\":\""+pageurl+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+				if(data.result=="ok"){
+					document.getElementById('zanText').innerHTML = '未点赞';
+					document.getElementById('icon-zan').style.color = '#666666';
+								
+								 }
+								},
+									error:function(xhr,type,errorThrown){
+									//异常处理；
+										console.log(type);
+									}});
+	}
+});
+
+ plus.share.getServices(function(s) {
+                if (s && s.length > 0) {
+                    for (var i = 0; i < s.length; i++) {
+                        var t = s[i];
+                        shares[t.id] = t;
+                    }
+                }
+            }, function() {
+                console.log("获取分享服务列表失败");
+            });
+        });
+         //分享链接点击事件
+        document.getElementById("share").addEventListener('tap', function() {
+            var ids = [{
+                    id: "weixin",
+                    ex: "WXSceneSession"
+                }, {
+                    id: "weixin",
+                    ex: "WXSceneTimeline"
+                }, {
+                    id: "sinaweibo"
+                }, {
+                    id: "tencentweibo"
+                }, {
+                    id: "qq"
+                }],
+                bts = [{
+                    title: "发送给微信好友"
+                }, {
+                    title: "分享到微信朋友圈"
+                }, {
+                    title: "分享到新浪微博"
+                }, {
+                    title: "分享到腾讯微博"
+                }, {
+                    title: "分享到QQ"
+                }];
+            plus.nativeUI.actionSheet({
+                cancel: "取消",
+                buttons: bts
+            }, function(e) {
+                var i = e.index;
+                if (i > 0) {
+                    var s_id = ids[i - 1].id;
+                    var share = shares[s_id];
+                    if (share.authenticated) {
+                        shareMessage(share, ids[i - 1].ex);
+                    } else {
+                        share.authorize(function() {
+                            shareMessage(share, ids[i - 1].ex);
+                        }, function(e) {
+                            console.log("认证授权失败：" + e.code + " - " + e.message);
+                        });
+                    }
+                }
+            });
+
+
+
+
+});
+
+// 分享执行动作
+        function shareMessage(share, ex) {
+                var msg = {
+                    extra: {
+                        scene: ex
+                    }
+                };
+                msg.href = videooriginurl;
+                msg.title = videoname;
+                msg.content = "关键字："+videokeyword ;
+             
+                msg.thumbs = ["https://xiaoliwaer.top:525/logo.png"];
+                share.send(msg, function() {
+                    console.log("分享到\"" + share.description + "\"成功！ ");
+                }, function(e) {
+                    console.log("分享到\"" + share.description + "\"失败: " + e.code + " - " + e.message);
+                });
+            }
+
+
+		</script>
+	</body>
+
+</html>

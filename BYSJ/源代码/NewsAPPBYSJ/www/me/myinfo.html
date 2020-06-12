@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	
+	<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css"/>
+	
+	<style type="text/css">
+		.list-title{
+			font-size: 15px;
+			display: inline-block;
+			position: fixed;
+			margin-top: 14px;
+			margin-left: 12px;
+		}
+		
+		.mui-table-view-cell {
+			position: relative;
+			overflow: hidden;
+			padding: 15px 15px;
+			-webkit-touch-callout: none;
+		}
+		
+		/* cell分割线 */
+		.mui-table-view-cell:after {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			left: 0px;
+			height: 1px;
+			content: '';
+			-webkit-transform: scaleY(.5);
+			transform: scaleY(.5);
+			background-color: #c8c7cc;
+		}
+		
+		.mui-table-view-cell.mui-active{
+			background-color: white;
+		}
+
+	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+ <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+ <h1 class="mui-title">个人信息</h1>
+</header>
+	
+<div class="mui-content" id='myselfinfo'>
+
+
+	<ul class="mui-table-view" style="margin-top: 10px;">
+			<li class="mui-table-view-cell">
+				<a  class="mui-navigate-right list-title" style="background-color: white;">
+					昵称:<span id="readernick" style="margin-left: 30px;"></span>
+				</a>
+			</li>
+		
+			<li class="mui-table-view-cell">
+				<a onclick="tableDidSelected(1)" class="mui-navigate-right list-title" style="background-color: white;">
+					性别:<span id="readersex" style="margin-left: 30px;"></span>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a onclick="tableDidSelected(2)" class="mui-navigate-right list-title" style="background-color: white;">
+					生日:<span id="readerbirthday" style="margin-left: 30px;"></span>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a onclick="tableDidSelected(3)" class="mui-navigate-right list-title" style="background-color: white;">
+					城市:<span id="user-city-id" style="margin-left: 30px;" ></span>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a onclick="tableDidSelected(0)" class="mui-navigate-right list-title" style="background-color: white;">
+					工作:<span id="user-name-id" style="margin-left: 30px;" ></span>
+				</a>
+			</li>
+		
+			<li class="mui-table-view-cell">
+				<a onclick="tableDidSelected(5)" class="mui-navigate-right list-title" style="background-color: white;">
+					阅读倾向:<span id="likeread" style="margin-left: 30px;" ></span>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a onclick="tableDidSelected(4)" class="mui-navigate-right list-title" style="background-color: white;">
+					手机号:<span id="readerphone" style="margin-left: 30px;" ></span>
+				</a>
+			</li>
+			
+		</ul>
+		
+	<div style="margin-top: 20px;">
+		<div style="font-size: 13px;margin-left: 5px;color: #666;">个人描述</div>
+		<div class="mui-input-row" style="margin-left: 3px;margin-right: 3px;margin-top: 5px;">
+			<textarea id="intro" rows="4" placeholder="简单的介绍下自己吧^_^" value="" style="border-radius: 2px; font-size: 14px; padding:5px 10px;"></textarea>
+		</div>
+	</div>
+</div>
+
+<button id="submit-button-id" type="button" class="mui-btn mui-btn-block" style="border-bottom-width: 0; background-color: #FF4500;color: white;position: fixed;bottom: 0;margin-bottom:0px;height: 50px;">提交修改</button>
+
+<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/p/open.page.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var u_sex;
+	var u_city;
+	var u_detail;
+	var u_phone;
+	var u_readlike;
+	
+	var myselfObj = new Vue({
+	el : "#myselfinfo",
+	data : {
+		data: []
+	},
+});
+
+	
+	document.addEventListener('save-username-event',function(e){
+		mui('#user-name-id')[0].innerText = e.detail.name;
+		u_name = e.detail.name;
+	})
+	
+	document.addEventListener('save-phone-event',function(e){
+		mui('#readerphone')[0].innerText = e.detail.phone;
+		u_phone = e.detail.phone;
+	})
+	document.addEventListener('save-readlike-event',function(e){
+		mui('#likeread')[0].innerText = e.detail.readlike;
+		u_readlike = e.detail.readlike;
+	})
+	
+	mui.plusReady(function () {
+		mui.init();
+		var nick = localStorage.getItem('user_id');
+mui.getJSON(
+'http://192.168.5.3:8080/students323/showreaderinfo?nick='+nick,
+	function(res){
+		console.log(res.status);
+		console.log(JSON.stringify(res));
+			myselfObj.name = res.data[0].nick;
+			
+		mui('#readernick')[0].innerText= res.data[0].nick;
+		mui('#readersex')[0].innerText =res.data[0].sex;
+		mui('#intro')[0].value = res.data[0].intro;
+		mui('#user-name-id')[0].innerText = res.data[0].work;
+		mui('#readerphone')[0].innerText = res.data[0].telephone;
+		mui('#likeread')[0].innerText = res.data[0].likeread;
+		mui('#readerbirthday')[0].innerText = res.data[0].birthday;
+		mui('#user-city-id')[0].innerText = res.data[0].city;
+		
+	   		
+	}
+);
+
+		
+	})
+	
+	
+	
+	function tableDidSelected(row){
+		switch (row){
+			case 0:
+			openNewPage('xiugai-name.html' , '修改工作' , true , {name:mui('#user-name-id')[0].innerText});break;
+			mui("#user-name-id")[0].innerText  = u_name;
+			case 1:
+			plus.nativeUI.actionSheet({cancel:"取消",buttons:[{title:"男"},{title:"女"}]}, function(e){
+				var i = e.index;
+				if(i < 0 )return;
+				mui("#readersex")[0].innerText = i == 1 ? '男':'女';
+				u_sex = i == 1 ? '男':'女';
+			} );break;
+			case 2://选择日期
+				var dtpicker = new mui.DtPicker({
+					type: "date",//设置日历初始视图模式 
+					beginDate: new Date(1900, 01, 01),//设置开始日期 
+					endDate: new Date(2025, 01, 01),//设置结束日期 
+					// value:'2000-01-01'
+				}) 
+				dtpicker.show(function(e) {
+					var datestr = e.y.value + '-' + e.m.value + '-' + e.d.value;
+					mui("#readerbirthday")[0].innerText = datestr;
+					u_age = datestr;
+				}) ;break;
+			case 3://选择城市
+				var cityPicker = new mui.PopPicker({
+					layer: 2
+				});
+				cityPicker.setData(cityData);
+				
+				cityPicker.show(function(items) {
+					var datestr = items[0].text + items[1].text;
+					mui("#user-city-id")[0].innerText = datestr;
+					u_city = datestr;
+				});break;
+				case 4:
+			openNewPage('updatephone.html' , '修改手机号' , true , {phone:mui('#readerphone')[0].innerText});break;
+			mui("#readerphone")[0].innerText  = u_phone;
+			case 5:
+			openNewPage('readlike.html' , '修改阅读倾向' , true , {readlike:mui('#likeread')[0].innerText});break;
+			mui("#likeread")[0].innerText  = u_readlike;	
+			default:break;
+		}
+	}
+	
+	///提交
+	mui('#submit-button-id')[0].addEventListener('tap' , function(){
+		
+		var nick=mui('#readernick')[0].innerText;
+		var sex=mui('#readersex')[0].innerText;
+		var intro=mui('#intro')[0].value;
+		console.log(intro);
+		var work=mui('#user-name-id')[0].innerText;
+		var phone=mui('#readerphone')[0].innerText;
+		var likeread=mui('#likeread')[0].innerText;
+		var birthday=mui('#readerbirthday')[0].innerText;
+		var city=mui('#user-city-id')[0].innerText;
+		
+		
+	mui.ajax('http://192.168.5.3:8080/students323/updatereaderinfo',{
+				data:"{\"nick\":\""+nick+"\",\"sex\":\""+sex+"\",\"intro\":\""+intro+"\",\"work\":\""+work+"\",\"phone\":\""+phone+"\",\"likeread\":\""+likeread+"\",\"birthday\":\""+birthday+"\",\"city\":\""+city+"\"}",
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						headers:{'Content-Type':'application/json'},	              
+						success:function(data){
+							console.log(data);
+							
+							 if(data.status=="ok"){
+						mui.toast('修改成功');	 	
+						mui.back();
+     
+                }
+				if(data.result=="false"){
+                    	       mui.toast('修改失败');
+                   }
+							},
+								error:function(xhr,type,errorThrown){
+									//异常处理；
+									console.log(type);
+						}
+					});
+		});		
+	
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../../js/mui.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery.min.js" ></script>
+    <link href="../../css/mui.min.css" rel="stylesheet"/>
+    
+  <style type="text/css">
+/*背景图片，高度*/
+#header{background:url(../../img/headerBg.jpg); height:104px;}
+/*logo 一行容纳不下两个元素时这行不缩小'*/
+#logo{width:50px; height:44px; text-align:center; flex-shrink:0;}
+
+#logo img{width:40px;}
+/*搜索框*/
+#indexSearch{width:100%; height:30px; background:#FFFFFF; margin:7px 15px; border-radius:30px;}
+#indexSearch input[type="search"]{display:block; width:96%; height:30px; line-height:30px; padding:0px 2%; background:none; -webkit-appearance:none; appearance:none; font-size:15px; text-indent:15px; text-align:left;}
+#indexCate{height:44px;}
+#indexCate a{color:#FFFFFF;}
+.mui-active{border-color:#FFFFFF !important;}
+</style>
+
+ 
+</head>
+<body>
+		
+		<div id="header" >
+	<!--两个在同一行-->
+	<div style="display:flex;">
+		<div id="logo">
+			<img src="../../img/logo.png" />
+		</div>
+		<div id="indexSearch">
+			<input type="search" value="" id="indexSearchPut" placeholder="请输入关键字" />
+		</div>
+	</div>
+		
+
+	<!--滚动分类-->
+	<div id="indexCate" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+		<div class="mui-scroll">
+			<a class="mui-control-item" v-for="(items, index) in cate" v-bind:id="index">{{items}}
+			</a>
+		</div>
+
+
+
+	<script type="text/javascript" src="../../js/vue.min.js"></script>
+	<script type="text/javascript">
+        
+    //启用双击监听
+        mui.init({
+            gestureConfig:{
+                doubletap:true
+            },
+            subpages:[{
+                url:'./pics.html',
+                id:'pics',
+                styles:{
+                    top:'88px',
+                    bottom: '0px'
+                }
+            }]
+        });
+    
+
+    
+    //解决沉浸式覆盖状态栏，h5+准备完毕
+    mui.plusReady(function(){
+	var isImmersedStatusbar = plus.navigator.isImmersedStatusbar();
+	if(isImmersedStatusbar){
+		//获取系统状态栏高度
+		var StatusbarHeigth  = plus.navigator.getStatusbarHeight();
+		var header = document.getElementById('header');
+		header.style.paddingTop = StatusbarHeigth+'px';
+	}
+});
+
+var indexCateObj = new Vue({
+	el : '#indexCate',
+	data : {
+		cate : []
+	}
+});
+
+mui.getJSON(
+	'http://192.168.5.3:8080/students323/selectnewscategoriespics',
+	{},
+	function(res){
+		indexCateObj.cate = res.data;
+		console.log(JSON.stringify(res))
+	}
+);
+
+mui('.mui-scroll').on('tap', '.mui-control-item',function(){
+	var index = this.getAttribute('id');
+	console.log(index)
+	var pics= plus.webview.getWebviewById('pics');
+	pics.evalJS('cate = '+index+';picsname = ""; getpics();');
+	var indexSearchPut = document.getElementById('indexSearchPut');
+	indexSearchPut.value = '';
+});
+
+		var indexSearchPut = document.getElementById('indexSearchPut');
+indexSearchPut.addEventListener('keyup', function(e){
+	if(e.keyCode == 13){
+		document.activeElement.blur();
+		var picsname = indexSearchPut.value;
+		var pics= plus.webview.getWebviewById('pics');
+		pics.evalJS('picsname = "'+ picsname  +'";getpics();');
+	}
+});
+	</script>
+</body>
+</html>

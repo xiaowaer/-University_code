@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+	
+ <mapper namespace="ljj.dao.VideoDao">
+  
+  
+<!-- 
+    <resultMap id="CommentList" type="BysjComment">
+    <result column="commentid" property="commentid"/>
+    <result column="userid" property="userid"/>
+    <result column="cmcontent" property="cmcontent"/>
+    <result column="target" property="target"/>
+    <result column="rootid" property="rootid"/>
+    <result column="parent" property="parent"/>
+     <result column="cmtime" property="cmtime"/>
+     <result column="cmtime" property="cmtime"/>
+     <result column="commenter" property="commenter"/>
+      <result column="cmhead" property="cmhead"/>
+    
+  </resultMap>
+  -->
+
+<!--分页查询-->
+    <select id="getVideoList" parameterType="Video" resultType="Video">
+        select *from video
+        <where>
+            <if test="videoname!=null and videoname!='' ">
+                and  videoname like  '%${videoname}%'
+            </if>
+            <if test="cid!=null and cid!=null">
+                and  cid like  '%${cid}%'
+            </if>
+           
+        </where>
+        ORDER BY  videoid desc 
+        limit #{currentPage},#{pageSize}
+    </select>
+    
+    
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(videoid) from video
+        <where>
+               <if test="videoname!=null and videoname!='' ">
+                and  videoname like  '%${videoname}%'
+            </if>
+            <if test="cid!=null and cid!=null">
+                and  cid like  '%${cid}%'
+            </if>
+            
+          </where>
+    </select>
+  
+
+
+  
+    <delete id="deleteVideo" parameterType="Integer" >
+        delete  from video where videoid=#{videoid} 
+    </delete>
+    
+        <select id="findVideoById"  parameterType="Integer" resultType="Video" >
+       select * from video where videoid=#{videoid}
+    </select>
+    
+    <update id="updateVideo" parameterType="ljj.pojo.Video" >
+        update video
+        <set>
+            <if test="videokeyword!= null">videokeyword=#{videokeyword},</if>
+            <if test="videoname != null">videoname=#{videoname},</if>
+            <if test="cid != null">cid=#{cid},</if>
+            <if test="videortime != null">videortime=#{videortime},</if>
+            <if test="targeturl != null">targeturl=#{targeturl},</if>
+            <if test="videooriginurl != null">videooriginurl=#{videooriginurl},</if>          
+        </set>
+        where videoid=#{videoid}
+</update>
+
+ <insert id="insertVideo" parameterType="Video">
+        insert into video(videoname,videoheadurl,videokeyword,cid,videooriginurl,videoorigin)
+        values(#{videoname},#{videoheadurl},#{videokeyword},#{cid},#{videooriginurl},#{videoorigin})
+    </insert>
+    
+
+</mapper>

@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+.mui-content{padding:10px; line-height:1.8em; color:#222222;}
+.mui-content img{width:100%;}
+.mui-content *{color:#222222; font-size:16px;}
+
+.comments{padding:8px; background:#FFFFFF; margin-bottom:1px; display:flex;}
+.comments-face{width:38px; flex-shrink:0;}
+.comments-face img{width:100%;}
+.comments-content{line-height:1.6em; font-size:14px; padding:0px 10px; width:100%;}
+.comments-content span{font-size:10px; color:#6D6D72;}
+.comments-content b{font-weight:400; font-size:15px; color:#6641E2;}
+
+
+.replybtn{
+	width: 50%;
+	margin-left: 50px;
+	margin-top: 5px;
+	/*padding: 0 20px;*/
+}
+
+
+.replybtn button{
+	background: #819FF7 ;
+	border: 0;
+	width: 100%;
+	color: #fff;
+	padding: 10px 0;
+	
+}
+
+.replybtn p{
+	text-align: center;
+	margin: 40px 0 0;
+	color: #ccc;
+	font-size: 12px;
+}
+
+
+</style>
+
+	</head>
+
+	<body>
+	<div id="main">
+		
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">我的评论</h1>
+	</header>
+
+	<div style="height:50px; line-height:50px; padding:0px 10px;">
+	</div>
+	
+
+
+	<div style="line-height:50px; text-align:center; color:#8F8F94;" v-bind:hidden="commentsLoadingHide">
+		{{commentsLoading}}
+	</div>
+
+<div style="height:10px; line-height:50px; padding:0px 10px;">
+	
+	</div>
+	
+	<div class="comments" v-for="items in comments">
+		<div class="comments-face"><img v-bind:src="items.cmhead" /></div>
+		<div class="comments-content">
+			<b>{{items.commenter}}</b><br />
+			{{items.cmcontent}}<br />
+   			<span>{{items.cmtime | moment}}</span>
+   		 <div class="replybtn"  @click="deleteMycomment(items.commentid);">
+		    	<button id="chakanhuifu">删除评论</button>
+		    </div>
+		     <div class="replybtn"  @click="tiaozuan(items.target);" >
+		    	<button id="chakanhuifu" style="background:#E6E6E6;" >跳转</button>
+		    </div>
+		</div>
+		
+		</div>
+	</div>
+	
+	</div>
+
+	
+	
+	
+	<div class="footer-line"></div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/moment.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+<script type="text/javascript">
+
+	
+	mui.init()
+	var artObj = new Vue({
+	el : '#main',
+	data : {
+		art : [],
+		commentsLoading : '评论加载中',
+		comments : [],
+		commentsLoadingHide : false	
+	},
+methods : {
+		deleteMycomment:function(commentid){
+		console.log(commentid);	
+		mui.getJSON(
+		'http://192.168.5.3:8080/students323/deleteMyComment?commentid='+commentid,
+		{},
+		function(res){
+			console.log(JSON.stringify(res));
+			if(res.status == 'ok'){
+			var wobj = plus.webview.getWebviewById('mycomment');
+			if(wobj!=null){
+   			wobj.reload(true);
+			}
+			
+			}else{
+				
+			}
+		}
+	);
+	},
+		tiaozuan:function(url){
+
+		console.log(url);
+		
+		mui.ajax('http://192.168.5.3:8080/students323/findContent?targeturl='+url,{
+							dataType:'json',//服务器返回json格式数据
+							type:'get',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(JSON.stringify(data.data));
+								if(data.type=="p"){
+									var picscontent=data.data.picscontent;
+									var targeturl=data.data.targeturl;
+									var picsoriginurl=data.data.picsoriginurl;
+									var picsname=data.data.picsname;
+									var picskeyword=data.data.picskeyword;
+									var picsid=data.data.picsid;
+				mui.openWindow({
+				url : "../pics/picscontent.html",
+				id : 'picscontent',
+				extras : {picscontent:picscontent,targeturl:targeturl,picsoriginurl:picsoriginurl,picsname:picsname,picskeyword:picskeyword,picsid:picsid,}
+			});
+								}
+								if(data.type=="n"){
+									var Newsurl=data.data.newsurl;
+									var Newstitle=data.data.newstitle
+									var Newskeyword=data.data.newskeyword;
+									var Targeturl=data.data.targeturl;
+									var Newscontent=data.data.newscontent;
+										
+											mui.openWindow({
+				url : "../news/newscontent.html",
+				id : 'newscontent',
+				extras : {Newsurl : Newsurl,Newstitle:Newstitle,Newskeyword:Newskeyword,Newscontent:Newscontent,Targeturl:Targeturl,}
+			});
+									}
+								if(data.type=="v"){
+									var videooriginurl=data.data.videooriginurl;
+									var videokeyword=data.data.videokeyword;
+									var videoname=data.data.videoname;
+									var videoid=data.data.videoid;
+				mui.openWindow({
+				url : "../video/videocontent.html",
+				id : 'videocontent',
+				extras : {videooriginurl:videooriginurl,videoname:videoname,videokeyword:videokeyword,videoid:videoid}
+			});
+								}
+								
+						
+								},
+									error:function(xhr,type,errorThrown){
+									//异常处理；
+										console.log(type);
+									}});
+	
+		
+		
+		
+
+//				mui.openWindow({
+//				url : "../news/newscontent.html",
+//				id : 'newscontent',
+//				extras : {Newsurl:url}
+//			});	
+		}	
+}	
+});
+
+mui.plusReady(function(){
+var isImmersedStatusbar = plus.navigator.isImmersedStatusbar();
+	if(isImmersedStatusbar){
+		var StatusbarHeight = plus.navigator.getStatusbarHeight();
+		var header = document.querySelectorAll('header');
+		header[0].style.height = (StatusbarHeight + 44) + 'px';
+		header[0].style.paddingTop = StatusbarHeight + 'px';
+		var mian = document.querySelectorAll('.mui-content');
+		if(mian.length >= 1){
+			mian[0].style.paddingTop = (44 + StatusbarHeight) + 'px';
+		}
+	}
+	
+	var _self = plus.webview.currentWebview();
+	//加载评论
+	Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+	
+
+
+
+function getComments(){
+	console.log("提交回复请求");
+	var nick= localStorage.getItem('user_id');
+	console.log(nick);
+	mui.getJSON(
+		'http://192.168.5.3:8080/students323/loadingMyComment?nick='+nick,
+		{},
+		function(res){
+			console.log(JSON.stringify(res));
+			if(res.status == 'ok'){
+					artObj.comments = res.data;
+				//将loading 隐藏
+				artObj.commentsLoadingHide = true;
+			}else{
+				artObj.commentsLoading = '暂无回复';
+			}
+		}
+	);
+}
+
+getComments();
+	
+});
+		</script>
+	</body>
+
+</html>

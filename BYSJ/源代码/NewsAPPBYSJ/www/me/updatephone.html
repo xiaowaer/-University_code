@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	
+	<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+</head>
+<body>
+	
+<div class="mui-content" >
+	<div class="mui-input-row">
+		<input id="name-id" type="text" placeholder="请输入手机号" style="height: 50px;font-size: 16px;border-width: 0;" value="">
+	</div>
+	
+
+</div>
+<button id="submit-button-id" type="button" class="mui-btn mui-btn-block" style="border-bottom-width: 0; color: #FF4500;position: fixed;bottom: 0;margin-bottom: 0;height: 50px;">保存</button>
+
+<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	
+	mui.init({
+		beforeback:function () {
+			var wv = plus.webview.getWebviewById('myinfo');
+			var _name = mui('#name-id')[0].value;
+			console.log(_name);
+			mui.fire(wv , 'save-phone-event' , {'phone':_name || ''});
+		}
+	})
+	
+
+	
+	
+	mui('#submit-button-id')[0].addEventListener('tap' , function(){
+		var textArea = document.getElementById('name-id');
+		var _content = textArea.value;
+		console.log(_content);
+		if(!(/^1[3456789]\d{9}$/.test(_content))){
+			mui.alert('请输入正确的手机号码');
+			return false;
+		}
+
+		mui.back();
+	})
+
+	mui.plusReady(function () {
+		var wv = plus.webview.currentWebview();
+		var phone = wv.phone;
+		console.log(wv.phone);
+		document.getElementById('name-id').value = phone;
+	})
+</script>
+</body>
+</html>

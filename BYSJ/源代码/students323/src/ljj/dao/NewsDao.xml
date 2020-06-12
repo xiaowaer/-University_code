@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ <mapper namespace="ljj.dao.NewsDao">
+  
+  
+
+<!--分页查询-->
+    <select id="getnewsList" parameterType="News" resultType="News">
+        select *from news
+        <where>
+           <if test="newsid!=null and newsid!=0">
+                and  newsid like  '%${newsid}%'
+            </if>
+            <if test="newstitle!=null and newstitle!='' ">
+                and  newstitle like  '%${newstitle}%'
+            </if>
+            <if test="cid!=null and cid!=null">
+                and  cid like  '%${cid}%'
+            </if>
+           
+        </where>
+        ORDER BY  newsid desc 
+        limit #{currentPage},#{pageSize}
+    </select>
+    
+    
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(newsid) from news
+          <where>
+        <if test="newsid!=null and newsid!=0">
+                and  newsid like  '%${newsid}%'
+            </if>
+            <if test="newstitle!=null and newstitle!='' ">
+                and  newstitle like  '%${newstitle}%'
+            </if>
+            <if test="cid!=null and cid!=null">
+                and  cid like  '%${cid}%'
+            </if>
+           
+        </where>
+    </select>
+  
+
+    <delete id="deletenews" parameterType="Integer" >
+        delete  from news where newsid=#{newsid} 
+    </delete>
+    
+    <select id="findnewsById"  parameterType="Integer" resultType="news" >
+       select * from news where newsid=#{newsid}
+    </select>
+    
+        <update id="updateNews" parameterType="ljj.pojo.News" >
+        update news
+        <set>
+            <if test="newskeyword!= null">newskeyword=#{newskeyword},</if>
+            <if test="newstitle != null">newstitle=#{newstitle},</if>
+            <if test="cid != null">cid=#{cid},</if>
+            <if test="newsrtime != null">newsrtime=#{newsrtime},</if>
+            <if test="newsorigin != null">newsorigin=#{newsorigin},</if>
+            <if test="targeturl != null">targeturl=#{targeturl},</if>
+            <if test="newsoriginurl != null">newsoriginurl=#{newsoriginurl},</if>  
+             <if test="newscontent != null">newscontent=#{newscontent},</if>          
+        </set>
+        where newsid=#{newsid}
+</update>
+
+ <insert id="insertNews" parameterType="News">
+        insert into news(newstitle,newsheadurl,newskeyword,cid,newsoriginurl,newsorigin,newscontent)
+        values(#{newstitle},#{newsheadurl},#{newskeyword},#{cid},#{newsoriginurl},#{newsorigin},#{newscontent})
+    </insert>
+    
+     <select id="getAllnewsList" resultType="News">
+        select *from news  
+    </select>
+    
+</mapper>

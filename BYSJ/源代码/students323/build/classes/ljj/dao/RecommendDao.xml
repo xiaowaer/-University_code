@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+ <mapper namespace="ljj.dao.RecommendDao">
+ 
+ 
+    <!--分页查询-->
+    <select id="getRecommendList" parameterType="Recommend" resultType="Recommend">
+        select *from recommend
+        <where>
+            <if test="re_intro!=null and re_intro!='' ">
+                and  re_intro like  '%${re_intro}%'
+            </if>
+            <if test="rusertype!=null and rusertype!=null">
+                and  rusertype like  '%${rusertype}%'
+            </if>
+           
+        </where>
+        ORDER BY  recommendid asc
+        limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="totalCount"  resultType="Integer">
+        select count(recommendid) from recommend
+            <where>
+            <if test="re_intro!=null and re_intro!='' ">
+                and  re_intro like  '%${re_intro}%'
+            </if>
+            <if test="rusertype!=null and rusertype!=null">
+                and  rusertype like  '%${rusertype}%'
+            </if>
+           
+        </where>
+          
+    </select>
+    
+
+ <insert id="insertRecommend" parameterType="ljj.pojo.Recommend" >
+        insert into recommend(re_url,re_intro,rusertype,recommendtime)
+        values(#{re_url},#{re_intro},#{rusertype},#{recommendtime})
+    </insert>
+    
+        <update id="updateRecommend" parameterType="ljj.pojo.Recommend" >
+        update recommend
+        <set>
+            <if test="re_url!= null">re_url=#{re_url},</if>
+            <if test="re_intro!= null">re_intro=#{re_intro},</if>
+            <if test="rusertype!= null">rusertype=#{rusertype},</if>
+            <if test="recommendtime!= null">recommendtime=#{recommendtime},</if>        
+        </set>
+        where re_url=#{re_url}
+</update>
+
+    <delete id="deleterecommend" parameterType="Integer" >
+        delete  from recommend where recommendid=#{recommendid} 
+    </delete>
+    
+        <delete id="deleteRecommendBytarget" parameterType="String" >
+        delete  from recommend where re_url=#{re_url} 
+    </delete>
+    
+    
+    <select resultType="Recommend" id="findRecommendBytargeturl" parameterType="String">select *from recommend where re_url=#{targeturl} </select>
+
+</mapper>

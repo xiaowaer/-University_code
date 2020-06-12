@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no , viewport-fit=cover">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="stylesheet" href="css/mui.min.css">
+	<link rel="stylesheet" href="css/icons-extra.css">
+	
+	<style type="text/css">
+		body {background-color: #efeff4;}
+		.mui-bar-tab .mui-tab-item.mui-active {color: #444444;}
+		.mui-title{color:#454545;font-weight: 450;}
+		* { touch-action: pan-y; } 
+	</style>
+</head>
+
+<body>
+	<nav class="mui-bar mui-bar-tab ">
+		<a id="defaultTab" class="mui-tab-item mui-active" href="www/news/newsIndex.html">
+			<span class="mui-icon-extra mui-icon-extra-new" ></span>
+			<span class="mui-tab-label">新闻</span>
+		</a>
+		
+		
+		<a class="mui-tab-item" href="www/video/videoIndex.html">
+			<span class=" mui-icon mui-icon-videocam"></span>
+			<span class="mui-tab-label">视频</span>
+		</a>
+		
+		<a class="mui-tab-item" href= "www/pics/picsIndex.html">
+			<span class="mui-icon mui-icon-image"  ></span>
+			<span class="mui-tab-label">图册</span>	
+		</a>
+		
+		<a class="mui-tab-item" id="page_login" href= "www/me/my.html">
+			<span class="mui-icon mui-icon-home" ></span>
+			<span class="mui-tab-label">个人中心</span>
+		</a>
+	</nav>
+		
+	<script src="js/mui.min.js"></script>
+	<script>
+		mui.init();
+		//子页面数组
+		var subpages = ['www/news/newsIndex.html', 'www/video/videoIndex.html', 'www/pics/picsIndex.html',"www/me/my.html"];
+		
+		//设置页面样式
+		function navigationBarStyle(index){
+			var subpage_style = {top: '0px',bottom: '51px'};
+			return subpage_style;
+		}
+		
+		var aniShow = {};
+		mui.plusReady(function() {
+			var h = plus.nativeUI.showWaiting();
+			plus.navigator.setFullscreen(false);
+			var self = plus.webview.currentWebview();
+			for (var i = 0; i < 4; i++) {
+				var subpage = subpages[i];
+				var suff = subpage.indexOf('.');
+				var objectName = subpage.substring(0,suff);	
+				var _style = navigationBarStyle(i);
+				var sub = plus.webview.create(subpages[i],objectName,_style);
+				if (i > 0) {
+					sub.hide();
+				}
+				self.append(sub);
+			}
+			
+			setTimeout(function(){
+				h.close();
+			},1500);
+				
+		});
+		var activeTab = subpages[0];	
+		mui('.mui-bar-tab').on('tap', 'a', function(e) {
+			var targetTab = this.getAttribute('href');
+			if (targetTab == activeTab)return;
+			var suff = targetTab.indexOf('.');
+			targetTab = targetTab.substring(0,suff);
+		    plus.webview.show(targetTab);
+		    plus.webview.hide(activeTab);
+		    activeTab = targetTab+'.html';
+		});
+
+		
+		 //自定义事件，模拟点击“首页选项卡”
+		document.addEventListener('gohome', function() {
+			var defaultTab = document.getElementById("defaultTab");
+			//模拟首页点击
+			mui.trigger(defaultTab, 'tap');
+			var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+			if (defaultTab !== current) {
+				current.classList.remove('mui-active');
+				defaultTab.classList.add('mui-active');
+			}
+		});			
+				
+
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+4<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" href="../../css/login.css" />
+		<script src="../../js/mui.min.js"></script>
+	</head>
+	
+	<body>
+		
+		<header class="mui-bar mui-bar-nav header-bg">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">登录</h1>
+		</header>
+		<!--body-->
+		<div class="mui-content login-bg">
+		    <div class="zhuce denglu">
+		    	<h1 class="zhuce-title">登录</h1>
+		    	<!--表单-->
+			    <form class="mui-input-group">
+			        <div class="mui-input-row">
+			            <label>昵称</label>
+			            <input type="text" class="mui-input-clear" placeholder="请输入昵称">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>密码</label>
+			            <input type="password" class="mui-input-clear" placeholder="请输入密码">
+			        </div>
+			    </form>
+		    </div>
+		    <div class="zhuce-btn denglu-btn">
+		    	<button id="loginbtn">登录</button>
+		    	<p><a id='reg'>注册</a></p>
+		    	
+		    </div>
+		</div>
+		<script type="text/javascript"  >
+		
+		    mui.init({
+        beforeback: function() {　　 
+            //获得父页面的webview
+            var list = plus.webview.currentWebview().opener();　　
+            //触发父页面的自定义事件(refresh),从而进行刷新
+            mui.fire(list, 'refresh');
+            //返回true,继续页面关闭逻辑
+            return true;
+        }
+    });
+
+
+document.getElementById('reg').addEventListener('tap', function(){
+	mui.openWindow({
+		url  :'register.html',
+		id : 'reg'
+	});
+});
+			  
+		var input=document.getElementsByTagName('input');
+		var zcbtn=mui("#loginbtn")[0];
+			zcbtn.addEventListener('tap',function(){
+				 var nick=input[0].value;;
+				var mima=input[1].value;;
+				console.log(nick);
+				   if(nick==''){
+					mui.prompt("昵称不能为空");
+					return;
+				}
+				if(mima==''){
+					mui.prompt("密码不能为空");
+					return;
+				}
+				
+				mui.ajax('http://192.168.5.3:8080/students323/readerlogin',{
+					data:"{\"nick\":\""+nick+"\",\"mima\":\""+mima+"\"}",
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(data){
+								console.log(data);
+								 if(data.result=="ok"){
+                       			 mui.toast('登录成功');
+                       			 mui.back();
+                        //保存一下登录信息
+                        localStorage.setItem('user_id',nick);
+						localStorage.setItem('readerid',data.readerid);
+						localStorage.setItem('head',data.head);
+						localStorage.setItem('historysizenews',0);
+						localStorage.setItem('historysizepics',0);
+						localStorage.setItem('historysizevideo',0);
+						
+                  setTimeout(function(){
+					plus.webview.currentWebview().close();
+					
+				},2000);
+                      
+                    }
+					if(data.result=="false"){
+                        	       mui.toast('登陆失败');
+                       }
+								},
+						error:function(xhr,type,errorThrown){
+										//异常处理；
+										console.log(type);
+									}
+						});
+
+			});		
+			  
+			  
+			  
+		</script>
+	
+		
+	</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<link href="../../css/mui.min.css" rel="stylesheet" />
+<style type="text/css">
+		.list-icon{
+			width: 25px;
+			height: 25px;
+			margin-top: 10px;
+			float: left;
+		}
+		.list-title{
+			font-size: 14px;
+			display: inline-block;
+			/* position: fixed; */
+			float: left;
+			margin-top: 14px;
+			margin-left: 12px;
+		}
+		
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+			margin: 0px;
+			padding: 5px 10px;
+			vertical-align: top;
+			border-right: 0px solid #eee;
+			border-bottom: 0px solid #eee;
+			background-color: white;
+		}
+		
+		.mui-table-view-cell > a:not(.mui-btn).mui-active {
+			background-color: #fff;
+		}
+		
+		.mui-table-view.mui-grid-view .mui-table-view-cell .mui-media-body {
+			font-size: 13px;
+			line-height: 15px;
+			display: block;
+			width: 100%;
+			height: 15px;
+			margin-top: 8px;
+			text-overflow: ellipsis;
+			color: #666;
+		}
+		
+		.mui-table-view:before{
+			height: 0;
+		}
+		
+	</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+ <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+ <h1 class="mui-title">评论公告</h1>
+</header>
+
+<div class="mui-content" >
+ 
+ 
+<ul id="me-tableview-id" class="mui-table-view" style="margin-top:20px;">
+			<li class="mui-table-view-cell">
+				<a id="myreply" class="mui-navigate-right">
+					<img  src="../../img/me/cm2.png" class="list-icon">
+					<div class="list-title">我的回复</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a id="mycomments" class="mui-navigate-right">
+					<img src="../../img/me/cm1.png" class="list-icon">
+					<div class="list-title">我的评论</div>
+					<span id="new-msgnumber-id" class="mui-badge mui-badge-danger" style="display: none; padding: 2px 8px;"></span>
+				</a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a id="osnotice"" class="mui-navigate-right">
+					<img src="../../img/me/nt.png" class="list-icon">
+					<div class="list-title">公告通知</div>
+				</a>
+			</li>
+		</div>
+<script src="../../js/mui.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script type="text/javascript">
+
+
+mui.plusReady(function(){
+
+document.getElementById('myreply').addEventListener('tap', function(){
+	mui.openWindow({
+		url : 'MyReply.html',
+		id : 'myreply'
+	});	
+});
+
+document.getElementById('mycomments').addEventListener('tap', function(){
+	mui.openWindow({
+		url : 'mycomment.html',
+		id : 'mycomment'
+	});
+	});
+
+
+document.getElementById('osnotice').addEventListener('tap', function(){
+	mui.openWindow({
+		url : 'osnotice.html',
+		id : 'osnotice'
+	});
+	});
+	
+});
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+	
+  <mapper namespace="ljj.dao.BysjCommentDao">
+  
+  
+
+    <resultMap id="CommentList" type="BysjComment">
+    <result column="commentid" property="commentid"/>
+    <result column="userid" property="userid"/>
+    <result column="cmcontent" property="cmcontent"/>
+    <result column="target" property="target"/>
+    <result column="rootid" property="rootid"/>
+    <result column="parent" property="parent"/>
+     <result column="cmtime" property="cmtime"/>
+     <result column="cmtime" property="cmtime"/>
+     <result column="commenter" property="commenter"/>
+      <result column="cmhead" property="cmhead"/>
+    
+  </resultMap>
+
+<!--分页查询-->
+    <select id="getcommentList" parameterType="BysjComment" resultType="BysjComment">
+        select *from bysjcomment
+        <where>
+           <if test="target!=null and target!=''">
+                and  target like  '%${target}%'
+            </if>
+            <if test="commenter!=null and commenter!='' ">
+                and  commenter like  '%${commenter}%'
+            </if>
+            <if test="cmcontent!=null and cmcontent!=null">
+                and  cmcontent like  '%${cmcontent}%'
+            </if>
+           
+        </where>
+        ORDER BY  commentid asc
+        limit #{currentPage},#{pageSize}
+    </select>
+    
+    
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(commentid) from bysjcomment
+          <where>
+           <if test="target!=null and target!=''">
+                and  target like  '%${target}%'
+            </if>
+            <if test="commenter!=null and commenter!='' ">
+                and  commenter like  '%${commenter}%'
+            </if>
+            <if test="cmcontent!=null and cmcontent!=null">
+                and  cmcontent like  '%${cmcontent}%'
+            </if>
+           
+        </where>
+    </select>  
+
+  
+  
+  
+<insert parameterType="BysjComment" id="insertComment" >
+	insert into
+	bysjcomment(rootid,parent,userid,cmcontent,target,cmtime,commenter,cmhead)
+	values
+	(0,0,#{userid},#{cmcontent},#{target},#{cmtime},#{commenter},#{cmhead})
+</insert>
+
+    <select parameterType="BysjComment" resultMap="CommentList" id="loadingCommentfortarget" >select commentid,rootid,parent,userid,cmcontent,cmtime,commenter,cmhead,target from bysjcomment where target= #{target} and rootid=0
+  </select>
+
+<insert parameterType="BysjComment" id="insertReply" >
+	insert into
+	bysjcomment(rootid,parent,userid,cmcontent,target,cmtime,commenter,cmhead)
+	values
+	(0,#{parent},#{userid},#{cmcontent},"0",#{cmtime},#{commenter},#{cmhead})	
+</insert>
+
+    <select parameterType="BysjComment" resultMap="CommentList" id="loadingReplyforparent" >select commentid,rootid,parent,userid,cmcontent,cmtime,commenter,cmhead,target from bysjcomment where parent= #{parent} 
+  </select>
+  
+      <select parameterType="BysjComment" resultMap="CommentList" id="loadingMyComment" >select commentid,rootid,parent,userid,cmcontent,cmtime,commenter,cmhead,target from bysjcomment where commenter= #{nick} and parent=0
+  </select>
+  
+    <delete id="deleteMyComment" parameterType="Integer" >
+        delete  from bysjcomment where commentid=#{commentid} or parent=#{commentid}
+    </delete>
+    
+    <delete id="deleteMyReply" parameterType="Integer" >
+        delete  from bysjcomment where commentid=#{commentid} or parent=#{commentid}
+    </delete>
+    
+        <select parameterType="BysjComment" resultMap="CommentList" id="loadingMyReply" >select commentid,rootid,parent,userid,cmcontent,cmtime,commenter,cmhead,target from bysjcomment where commenter= #{nick} and parent!=0
+  </select>
+  
+     <delete id="deleteCommentBytarget" parameterType="String" >
+        delete  from bysjcomment where target=#{target}
+    </delete>
+     <delete id="deleteCommentByreader" parameterType="Integer" >
+        delete  from bysjcomment where userid=#{userid}
+    </delete>
+  
+
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+	
+ <mapper namespace="ljj.dao.PicsDao">
+  
+  
+
+<!--分页查询-->
+    <select id="getPicsList" parameterType="Pics" resultType="Pics">
+        select *from pictures
+        <where>
+           <if test="picsid!=null and picsid!=0">
+                and  picsid like  '%${picsid}%'
+            </if>
+            <if test="picsname!=null and picsname!='' ">
+                and  picsname like  '%${picsname}%'
+            </if>
+            <if test="cid!=null and cid!=null">
+                and  cid like  '%${cid}%'
+            </if>
+           
+        </where>
+        ORDER BY  picsid desc 
+        limit #{currentPage},#{pageSize}
+    </select>
+    
+    
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(picsid) from pictures
+          <where>
+        <if test="picsid!=null and picsid!=0">
+                and  picsid like  '%${picsid}%'
+            </if>
+            <if test="picsname!=null and picsname!='' ">
+                and  picsname like  '%${picsname}%'
+            </if>
+            <if test="cid!=null and cid!=null">
+                and  cid like  '%${cid}%'
+            </if>
+           
+        </where>
+    </select>
+  
+
+    <delete id="deletePics" parameterType="Integer" >
+        delete  from pictures where picsid=#{picsid} 
+    </delete>
+    
+    <select id="findPicsById"  parameterType="Integer" resultType="Pics" >
+       select * from pictures where picsid=#{picsid}
+    </select>
+    
+        <update id="updatePics" parameterType="ljj.pojo.Pics" >
+        update pictures
+        <set>
+            <if test="picskeyword!= null">picskeyword=#{picskeyword},</if>
+            <if test="picsname != null">picsname=#{picsname},</if>
+            <if test="cid != null">cid=#{cid},</if>
+            <if test="picsrtime != null">picsrtime=#{picsrtime},</if>
+            <if test="targeturl != null">targeturl=#{targeturl},</if>
+            <if test="picsoriginurl != null">picsoriginurl=#{picsoriginurl},</if>    
+             <if test="picscontent != null">picscontent=#{picscontent},</if>          
+        </set>
+        where picsid=#{picsid}
+</update>
+    
+     <insert id="insertPics" parameterType="Pics">
+        insert into pictures (picsname,picsheadurl,picskeyword,cid,picsoriginurl,picsorigin,picscontent)
+        values(#{picsname},#{picsheadurl},#{picskeyword},#{cid},#{picsoriginurl},#{picsorigin},#{picscontent})
+    </insert>
+    
+     <select id="findallpics" resultType="Pics">
+        select *from pictures 
+    </select>
+    
+    
+
+
+</mapper>

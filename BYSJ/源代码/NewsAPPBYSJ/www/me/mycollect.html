@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+.mui-content{padding:10px; line-height:1.8em; color:#222222;}
+.mui-content img{width:100%;}
+.mui-content *{color:#222222; font-size:16px;}
+
+.keywords{line-height:1.6em; font-size:12px;color: blue;text-align:center;}
+.rtime{line-height:1.0em; font-size:12px;color: #6641E2;text-align: right;}
+
+
+.replybtn{
+	width: 50%;
+	margin-left: 50px;
+	margin-top: 5px;
+	/*padding: 0 20px;*/
+}
+
+
+.replybtn button{
+	background: #819FF7 ;
+	border: 0;
+	width: 100%;
+	color: #fff;
+	padding: 10px 0;
+	
+}
+
+.replybtn p{
+	text-align: center;
+	margin: 40px 0 0;
+	color: #ccc;
+	font-size: 12px;
+}
+
+
+</style>
+
+	</head>
+
+	<body>
+	<div id="main">
+		
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">我的收藏</h1>
+	</header>
+
+	<div style="height:50px; line-height:38px; padding:0px ;"></div>
+	
+
+
+	<div style="line-height:50px; text-align:center; color:#8F8F94;" v-bind:hidden="collectsLoadingHide">
+		{{collectsLoading }}
+	</div>
+
+<div style="height:10px; line-height:50px; padding:0px 10px;"></div>
+	
+	<div class="collects" v-for="items in news"  @click="showNewcontent(items.newscontent,items.newstitle,items.newskeywords,items.newsid,items.targeturl,items.newsoriginurl);"
+		style="padding:5px;margin:5px;border:2px solid #000;background: #fff;">
+		<div class="collects-face" style="text-align: center;">
+			<img v-bind:src="items.newsheadurl" style="height:150px;width:300px;align-content: center;"/>
+		</div>
+		<div class="collects-content" style="display: inline-block;">
+			<h4 style="margin：0px;color:#222222;font-weight:100;font-family:'微软雅黑';">{{items.newstitle}}</h4>
+        <div class="mui-col-xs-12 keywords"><span style="color: red;">关键词:</span>{{items.newskeyword}}</div>
+          <div class="mui-col-xs-12 rtime">发布时间:{{items.newsrtime|moment}}</div>
+		</div>
+	</div>
+
+	
+	
+	<div  v-for="items in video"  @click="showVideo(items.videooriginurl,items.videoname,items.videokeyword,items.videoid);"
+		style="padding:5px;margin:5px;border:2px solid #000;background: #fff;">
+		<div class="collects-face" style="text-align: center;">
+			<img v-bind:src="items.videoheadurl" style="height:150px;width:300px;"/>
+		</div>
+		<div class="collects-content" >
+			<h4 style="margin：0px;color:#222222;font-weight:100;font-family:'微软雅黑';text-align: center;">{{items.videoname}}</h4>
+        <div class="mui-col-xs-12 keywords"><span style="color: red;">关键词:</span>{{items.videokeyword}}</div>
+          <div class="mui-col-xs-12 rtime">发布时间:{{items.videortime|moment}}</div>
+		</div>
+	</div>
+	
+		
+	<div  v-for="items in pics"  @click="showpicscontent(items.picscontent,items.targeturl,items.picsoriginurl,items.picsname,items.picskeyword,items.picsid);"
+		style="padding:5px;margin:5px;border:2px solid #000;background: #fff;">
+		<div class="collects-face" style="text-align: center;">
+			<img  v-bind:src="items.picsheadurl" style="height:150px;width:300px;align-content: center;"/>
+			<span class="aui-title-vio">
+		</div>
+		
+		<div class="collects-content" >
+			<h4 style="margin：0px;color:#222222;font-weight:100;font-family:'微软雅黑';">{{items.picsname}}</h4>
+        <div class="mui-col-xs-12 keywords"><span style="color: red;">关键词:</span>{{items.picskeyword}}</div>
+          <div class="mui-col-xs-12 rtime">发布时间:{{items.picsrtime|moment}}</div>
+		</div>
+	</div>
+	
+	
+	
+
+
+
+	
+	
+	
+	<div class="footer-line"></div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/moment.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+<script type="text/javascript">
+
+	
+	mui.init()
+
+	var artObj = new Vue({
+	el : '#main',
+	data : {
+		news : [],
+		pics : [],
+		video : [],
+		collectsLoading : '收藏加载中',
+		collectsLoadingHide : false	
+	},
+	methods : {
+		
+		showpicscontent:function(picscontent,targeturl,picsoriginurl,picsname,picskeyword,picsid){
+		  var picsoriginurladd=picsoriginurl+'?vt=4&hd=1';
+		    var picsoriginurl=picsoriginurl;
+		  console.log(picsoriginurl);
+		 		if(targeturl!=null){
+				mui.openWindow({
+				url : "../pics/picscontent.html",
+				id : 'picscontent',
+				extras : {picscontent:picscontent,targeturl:targeturl,picsoriginurl:picsoriginurl,picsname:picsname,picskeyword:picskeyword,picsid:picsid,}
+			});
+			}
+				if(targeturl==null){
+					mui.openWindow({
+				url : "../pics/NOnews.html",
+				id : 'nonews',
+			});
+				}
+				
+		},
+			showNewcontent:function(Newscontent,Newstitle,Newskeyword,Newsid,Targeturl,Newsurl){
+				if(Targeturl!=null){
+				mui.openWindow({
+				url : "../news/newscontent.html",
+				id : 'newscontent',
+				extras : {Newsurl : Newsurl,Newstitle:Newstitle,Newskeyword:Newskeyword,Newscontent:Newscontent,Targeturl:Targeturl,}
+			});
+			}
+				if(Targeturl==null){
+					mui.openWindow({
+				url : "../news/NOnews.html",
+				id : 'nonews',
+			});
+				}
+		},
+		
+		showVideo:function(videooriginurl,videoname,videokeyword,videoid){
+		  var videooriginurl=videooriginurl;
+		  console.log(videooriginurl);
+		  mui.ajax('http://192.168.5.3:8080/students323/testurl',{
+	        data:"{\"videooriginurl\":\""+videooriginurl+"\"}",
+			dataType:'json',//服务器返回json格式数据
+			type:'post',//HTTP请求类型
+			timeout:10000,//超时时间设置为10秒；
+			headers:{'Content-Type':'application/json'},
+	        success:function(data){
+	        	if(data.result=="ok"){
+	        	console.log(JSON.stringify(data));
+                    var url=data.url;
+                mui.openWindow({
+				url : "../video/videocontent.html",
+				id : 'videocontent',
+				extras : {videooriginurl:videooriginurl,videoname:videoname,videokeyword:videokeyword,videoid:videoid}
+			});
+	        	}
+	        	if(data.result=="false"){
+	        	 mui.openWindow({
+				url : "../video/NOvideo.html",
+				id : 'NOvideo',
+			});
+	        	}},
+	        error:function(){
+	        	 mui.toast('出错');
+	        }
+	    }); 
+				
+		}
+	}
+
+});
+
+mui.plusReady(function(){
+var isImmersedStatusbar = plus.navigator.isImmersedStatusbar();
+	if(isImmersedStatusbar){
+		var StatusbarHeight = plus.navigator.getStatusbarHeight();
+		var header = document.querySelectorAll('header');
+		header[0].style.height = (StatusbarHeight + 44) + 'px';
+		header[0].style.paddingTop = StatusbarHeight + 'px';
+		var mian = document.querySelectorAll('.mui-content');
+		if(mian.length >= 1){
+			mian[0].style.paddingTop = (44 + StatusbarHeight) + 'px';
+		}
+	}
+	
+	var _self = plus.webview.currentWebview();
+	//加载评论
+	Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+	
+
+	window.addEventListener('refresh', function(e){//执行刷新
+    location.reload();
+});
+
+function loadingMyCollects(){
+	console.log("加载收藏中");
+	var nick= localStorage.getItem('user_id');
+	var pageIndextemp=1;
+	console.log(nick);
+	mui.getJSON(
+		'http://192.168.5.3:8080/students323/loadingMyCollects?nick='+nick+'&pageIndextemp='+pageIndextemp,
+		{},
+		function(res){
+			console.log(JSON.stringify(res.datanews));
+			console.log(JSON.stringify(res.datapics));
+			console.log(JSON.stringify(res.datavideo));
+			if(res.status == 'ok'){
+					artObj.news = res.datanews;
+					artObj.pics = res.datapics;
+					artObj.video =res.datavideo;
+				//将loading 隐藏
+				artObj.collectsLoadingHide = true;
+			}else{
+				artObj.collectsLoading = '暂无收藏';
+			}
+		}
+	);
+}
+
+loadingMyCollects();
+	
+});
+		</script>
+	</body>
+
+</html>

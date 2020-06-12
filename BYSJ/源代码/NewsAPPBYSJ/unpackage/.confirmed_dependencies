@@ -1,0 +1,182 @@
+{
+	"index.html": {
+		"resources": [
+			"www/news/news.html",
+			"www/news/newsIndex.html",
+			"www/video/videoIndex.html",
+			"www/pics/pics.html",
+			"www/pics/picsIndex.html",
+			"css/mui.min.css",
+			"js/mui.min.js",
+			"css/icons-extra.css",
+			"www/me/my.html"
+		],
+		"refer": [
+			"www/news/news.html",
+			"www/video/video.html",
+			"www/pics/pics.html",
+			"www/me/my.html",
+			"www/news/newsIndex.html",
+			"www/video/videoIndex.html",
+			"www/pics/picsIndex.html",
+			"www/me/myself.html"
+		]
+	},
+	"www/news/newsIndex.html": {
+		"resources": [
+			"www/news/news.html",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"www/news/news.html"
+		]
+	},
+	"www/video/videoIndex.html": {
+		"resources": [
+			"www/video/video.html",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"www/video/video.html"
+		]
+	},
+	"www/video/video.html": {
+		"refer": [
+			"www/video/videocontent.html",
+			"www/video/NOvideo.html"
+		],
+		"resources": [
+			"css/video.css",
+			"css/mui.min.css"
+		]
+	},
+	"www/news/news.html": {
+		"refer": [
+			"www/news/newscontent.html",
+			"www/news/NOnews.html"
+		],
+		"resources": [
+			"css/mui.min.css"
+		]
+	},
+	"www/pics/picsIndex.html": {
+		"resources": [
+			"www/pics/pics.html",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"www/pics/pics.html"
+		]
+	},
+	"www/pics/pics.html": {
+		"refer": [
+			"www/pics/picscontent.html",
+			"www/video/NOvideo.html"
+		],
+		"resources": [
+			"css/mui.min.css"
+		]
+	},
+	"www/me/my.html": {
+		"refer": [
+			"www/login/login.html",
+			"www/me/myself.html",
+			"www/me/BYSJ.html",
+			"www/me/mycollect.html",
+			"www/me/myinfo.html",
+			"www/me/localhistory.html",
+			"www/me/cmandnt.html",
+			"www/me/myrecommend.html"
+		],
+		"resources": [
+			"css/login.css",
+			"css/mui.min.css",
+			"css/style.css",
+			"www/me/myself.html"
+		]
+	},
+	"www/login/login.html": {
+		"resources": [
+			"www/login/register.html",
+			"css/style.css"
+		],
+		"refer": [
+			"www/login/register.html",
+			"www/me/myself.html",
+			"www/news/newsIndex.html",
+			"index.html"
+		]
+	},
+	"www/me/myself.html": {
+		"refer": [
+			"www/me/myinfo.html",
+			"www/login/login.html",
+			"www/me/cmandnt.html",
+			"www/me/mycollect.html",
+			"www//local/localhistory.html",
+			"www/me/localhistory.html",
+			"www/me/myrecommend.html"
+		]
+	},
+	"www/me/myinfo.html": {
+		"refer": [
+			"www/me/xiugai-name.html",
+			"www/me/updatephone.html",
+			"www/me/readlike.html"
+		]
+	},
+	"www/news/newscontent.html": {
+		"refer": [
+			"www/news/reply.html"
+		]
+	},
+	"www/me/cmandnt.html": {
+		"refer": [
+			"www/me/mycomment.html",
+			"www/me/myinfo.html",
+			"www/me/MyReply.html",
+			"www/me/osnotice.html"
+		]
+	},
+	"www/me/mycomment.html": {
+		"refer": [
+			"www/news/newscontent.html",
+			"www/pics/picscontent.html"
+		]
+	},
+	"www/me/MyReply.html": {
+		"refer": [
+			"www/news/reply.html"
+		]
+	},
+	"www/me/mycollect.html": {
+		"refer": [
+			"www/news/newscontent.html",
+			"www/video/videocontent.html",
+			"www/pics/picscontent.html"
+		]
+	},
+	"www/me/localhistory.html": {
+		"refer": [
+			"www/news/newscontent.html",
+			"www/pics/picscontent.html",
+			"www/video/videocontent.html"
+		]
+	},
+	"www/video/videocontent.html": {
+		"refer": [
+			"www/news/reply.html"
+		]
+	},
+	"www/pics/picscontent.html": {
+		"refer": [
+			"www/news/reply.html"
+		]
+	},
+	"www/me/myrecommend.html": {
+		"refer": [
+			"www/news/newscontent.html",
+			"www/pics/picscontent.html"
+		]
+	}
+}

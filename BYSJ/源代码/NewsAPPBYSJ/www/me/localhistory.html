@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+
+
+
+
+</style>
+
+	</head>
+
+	<body>
+	<div id="main">
+		
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">查看历史</h1>
+	</header>
+
+	<div style="height:50px; line-height:50px; padding:0px 10px;">
+	</div>
+	
+
+
+	<div style="line-height:50px; text-align:center; color:#8F8F94;" >
+	</div>
+
+<div style="height:10px; line-height:50px; padding:0px 10px;">
+	
+	</div>
+
+   
+
+<div class="historynew" v-for="items in historynews"  @click="showNewcontent(items.flag1);"
+		style="padding:5px;margin:5px;border:2px solid #000;background: #fff;">
+			 <div style="margin: 0 auto;text-align: center;color: red;">-----新闻------</div>
+			<div class="history-content" style="display: inline-block;">
+			<p style="margin：0px;color:#222222;font-size:16px;font-weight: 200;font-family:'微软雅黑';"><span style="color: blue;">标题:</span>{{items.title2}}。</p>
+			</div>
+</div>
+
+<div class="historypics" v-for="items in historypics"  @click="showPicscontent(items.flag1);"
+		style="padding:5px;margin:5px;border:2px solid #000;background: #fff;">
+				 <div style="margin: 0 auto;text-align: center;color: red;">-----图册------</div>
+			<div class="history-content" style="display: inline-block;">
+			<p style="margin：0px;color:#222222;font-size:16px;font-weight: 200;font-family:'微软雅黑';"><span style="color: blue;">标题:</span>{{items.title2}}。</p>
+			</div>
+</div>
+
+<div class="historyvideo" v-for="items in historyvideo"  @click="showVideocontent(items.flag1);"
+		style="padding:5px;margin:5px;border:2px solid #000;background: #fff;">
+				 <div style="margin: 0 auto;text-align: center;color: red;">-----视频------</div>
+			<div class="history-content" style="display: inline-block;">
+			<p style="margin：0px;color:#222222;font-size:16px;font-weight: 200;font-family:'微软雅黑';"><span style="color: blue;">标题:</span>{{items.title2}}。</p>
+			</div>
+</div>
+
+	
+	
+	<div class="footer-line"></div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/moment.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+<script type="text/javascript">
+
+	
+	mui.init()
+	var historyObj = new Vue({
+	el : '#main',
+	data : {	
+		historynews : [],
+		historypics : [],
+		historyvideo : [],
+		
+	},
+	methods : {
+		showNewcontent:function(target){
+			var target = target;
+				mui.getJSON(
+		'http://192.168.5.3:8080/students323/returnhistoryitem?target='+target,
+		{},
+		function(res){
+			console.log(JSON.stringify(res.historyitem));
+
+			if(res.status == 'ok'){
+			console.log(JSON.stringify(res.historyitem));
+				//将loading 隐藏
+				 mui.toast('跳转界面');
+				var Newsurl=res.historyitem.newsoriginurl;
+				var Newstitle=res.historyitem.newstitle;
+				var	Newskeyword=res.historyitem.newskeyword;
+				var Newscontent=res.historyitem.newscontent;
+				var Targeturl=res.historyitem.targeturl;
+				mui.openWindow({
+				url : "../news/newscontent.html",
+				id : 'newscontent',
+				extras : {Newsurl : Newsurl,Newstitle:Newstitle,Newskeyword:Newskeyword,Newscontent:Newscontent,Targeturl:Targeturl,}
+			});
+				 	 
+			}else{
+				 mui.toast('请求历史失败');}
+		});},
+		
+		showPicscontent:function(target){
+			var target = target;
+				mui.getJSON(
+		'http://192.168.5.3:8080/students323/returnhistoryitem?target='+target,
+		{},
+		function(res){
+			console.log(JSON.stringify(res.historyitem));
+
+			if(res.status == 'ok'){
+			console.log(JSON.stringify(res.historyitem));
+				//将loading 隐藏
+				 mui.toast('跳转界面');
+				var picsoriginurl=res.historyitem.picsoriginurl;
+				var picsname=res.historyitem.picsname;
+				var	picskeyword=res.historyitem.picskeyword;
+				var picscontent=res.historyitem.picscontent;
+				var targeturl=res.historyitem.targeturl;
+				var picsid=res.historyitem.picsid;
+				mui.openWindow({
+				url : "../pics/picscontent.html",
+				id : 'picscontent',
+				extras : {picscontent:picscontent,targeturl:targeturl,picsoriginurl:picsoriginurl,picsname:picsname,picskeyword:picskeyword,picsid:picsid,}
+			});
+				 	 
+			}else{
+				 mui.toast('请求历史失败');}
+		});},
+	
+	showVideocontent:function(target){
+			var target = target;
+				mui.getJSON(
+		'http://192.168.5.3:8080/students323/returnhistoryitem?target='+target,
+		{},
+		function(res){
+			console.log(JSON.stringify(res.historyitem));
+
+			if(res.status == 'ok'){
+			console.log(JSON.stringify(res.historyitem));
+				//将loading 隐藏
+				 mui.toast('跳转界面');
+				var videooriginurl=res.historyitem.videooriginurl;
+				var videoname=res.historyitem.videoname;
+				var videokeyword=res.historyitem.videokeyword;
+				var videoid=res.historyitem.videoid;
+			    mui.openWindow({
+				url : "../video/videocontent.html",
+				id : 'videocontent',
+				extras : {videooriginurl:videooriginurl,videoname:videoname,videokeyword:videokeyword,videoid:videoid}
+			});
+				 	 
+			}else{
+				 mui.toast('请求历史失败');}
+		});},
+	
+	
+	
+	
+	},
+});
+
+mui.plusReady(function(){
+var isImmersedStatusbar = plus.navigator.isImmersedStatusbar();
+	if(isImmersedStatusbar){
+		var StatusbarHeight = plus.navigator.getStatusbarHeight();
+		var header = document.querySelectorAll('header');
+		header[0].style.height = (StatusbarHeight + 44) + 'px';
+		header[0].style.paddingTop = StatusbarHeight + 'px';
+		var mian = document.querySelectorAll('.mui-content');
+		if(mian.length >= 1){
+			mian[0].style.paddingTop = (44 + StatusbarHeight) + 'px';
+		}
+	}
+	
+	var _self = plus.webview.currentWebview();
+	
+
+
+
+function loadingMyCollects(){
+	sizenews=localStorage.getItem('historysizenews');
+	sizepics=localStorage.getItem('historysizepics');
+	sizevideo=localStorage.getItem('historysizevideo');
+	
+	console.log("历史记录数");
+	console.log(sizenews);
+	console.log(sizepics);
+	console.log(sizevideo);
+			var data1 = [];
+			var data2 = [];
+			var data3 = [];
+		for(i =0; i<sizenews; i++){
+			var histemp=localStorage.getItem('historynews'+i.toString());
+			var flag=histemp.split(",")[0];
+			var title=histemp.split("#")[1];
+			var histroy1 = new Object();
+			histroy1.title2=title;
+			histroy1.flag1=flag;
+			data1.push(histroy1);
+			}
+			for(i =0; i<sizepics; i++){
+			var histemp1=localStorage.getItem('historypics'+i.toString());
+			var flag1=histemp1.split(",")[0];
+			var title1=histemp1.split("#")[1];
+			var histroy2 = new Object();
+			histroy2.title2=title1;
+			histroy2.flag1=flag1;
+			data2.push(histroy2);
+			}
+			for(i =0; i<sizevideo; i++){
+			var histemp2=localStorage.getItem('historyvideo'+i.toString());
+			var flag2=histemp2.split(",")[0];
+			var title2=histemp2.split("#")[1];
+			var histroy3 = new Object();
+			histroy3.title2=title2;
+			histroy3.flag1=flag2;
+			data3.push(histroy3);
+			}
+
+
+			historyObj.historynews = data1;
+			historyObj.historypics = data2;
+			historyObj.historyvideo = data3;
+			console.log("数据情况");
+			console.log(JSON.stringify(historyObj.historynews));
+			console.log(JSON.stringify(historyObj.historypics));
+			console.log(JSON.stringify(historyObj.historyvideo));
+}	
+loadingMyCollects();
+	
+});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+  <mapper namespace="ljj.dao.ReaderDao">
+
+  <resultMap id="ReaderList" type="Reader">
+    <id column="readerid" property="readerid"/>
+    <result column="nick" property="nick"/>
+    <result column="birthday" property="birthday"/>
+    <result column="telephone" property="telephone"/>
+    <result column="sex" property="sex"/>
+      <result column="work" property="work"/>
+        <result column="likeread" property="likeread"/>
+        <result column="city" property="city"/>
+    <result column="intro" property="intro"/>
+  </resultMap>
+  
+  
+  
+   <!--分页查询-->
+    <select id="getReaderList" parameterType="Reader" resultType="Reader">
+        select *from reader
+        <where>
+            <if test="nick!=null and nick!='' ">
+                and  nick like  '%${nick}%'
+            </if>
+            <if test="sex!=null and sex!=null">
+                and  sex like  '%${sex}%'
+            </if>
+           
+        </where>
+        ORDER BY  readerid asc
+        limit #{currentPage},#{pageSize}
+    </select>
+    
+    
+    <!--查询数据总数-->
+    <select id="totalCount"  resultType="Integer">
+        select count(readerid) from reader
+        <where>
+               <if test="nick!=null and nick!='' ">
+                and  nick like  '%${nick}%'
+            </if>
+            <if test="sex!=null and sex!=null">
+                and  sex like  '%${sex}%'
+            </if>
+            
+          </where>
+    </select>
+  
+  
+  
+
+  
+<insert parameterType="string" id="insertReaderauto" >
+	insert into
+	reader(nick)
+	values
+	(#{nick})
+</insert>
+
+  <select parameterType="string" resultMap="ReaderList" id="findreaderbynick" >select readerid,nick,birthday,telephone,sex,work,likeread,city,intro from reader where nick= #{nick}
+  </select> 
+
+  
+<update id="updatereaderinfo" parameterType="ljj.pojo.Reader" >
+        update reader
+        <set>
+            <if test="intro != null">intro=#{intro},</if>
+            <if test="work != null">work=#{work},</if>
+            <if test="sex != null">sex=#{sex},</if>
+            <if test="telephone != null">telephone=#{telephone},</if>
+            <if test="likeread != null">likeread=#{likeread},</if>
+            <if test="birthday != null">birthday=#{birthday},</if>
+            <if test="city != null">city=#{city},</if>
+        </set>
+        where nick=#{nick}
+</update>
+
+<delete id="deletereader" parameterType="Integer" >
+        delete  from reader where readerid=#{readerid} 
+    </delete>
+    
+        <select id="findreaderById"  parameterType="Integer" resultType="Reader" >
+       select * from reader where readerid=#{readerid}
+    </select>
+    
+
+
+
+</mapper>

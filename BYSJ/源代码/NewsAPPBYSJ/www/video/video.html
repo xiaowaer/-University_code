@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/video.css"/>
+	<style type="text/css">
+
+.video-list{padding:0px; margin:0;}
+.video-list li{display:flex; width:90%; padding:0px; background:#FFFFFF; margin:1px 18px;border:2px solid #000;}
+.video-list-img img{width:100%;}
+.video-list-title{
+line-height:1.2em; font-size:16px;	
+}
+
+	</style>
+	</head>
+
+	<body>
+		
+	<div id="refreshContainer" style="align: center;">
+	<ul class="video-list">
+		<li id ="li" v-for="item in videoList" @click="showVideocontent(item.targeturl,item.videooriginurl,item.videoname,item.videokeyword,item.videoid);">
+			
+			<section class="aui-middle-dome">
+				<div >
+					<h3 class="video-list-title">{{item.videoname}}</h3>
+			</div>	
+					<div class="aui-title-img">
+						<div class="video-list-img">
+							
+				<img class="mui-media-object" v-bind:src="item.videoheadurl" />
+						<span class="aui-title-vio">
+						</div>
+					
+					</div>
+					<div class="aui-title-text clearfix">
+						<span class="aui-ban">{{item.videokeyword}}</span>
+						<span class="aui-zan">爬取时间 ：{{item.videoctime| moment}}</span>
+						
+					</div>
+				</a>
+			</section>
+		
+		
+		
+
+
+		</li>
+	</ul>
+</div>	
+
+		
+		<script src="../../js/moment.min.js"></script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script type="text/javascript">
+Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+			mui.init({
+	pullRefresh : {
+		container:"#refreshContainer",
+		down : {
+			style :'circle',
+			auto: true,
+			callback : getvideo
+		},
+		up : {
+	       height : 50,
+	       auto : false,
+	       contentrefresh : "正在加载...",
+	       contentnomore  : '没有更多数据了',
+	       callback : getMorevideo
+	     }
+	}
+
+});
+		
+var videoObj = new Vue({
+	el : "#refreshContainer",
+	data : {
+		videoList : []
+	},
+	methods : {
+		
+		showVideocontent:function(targeturl,videooriginurl,videoname,videokeyword,videoid){
+
+			if(targeturl!=null){
+			size=localStorage.getItem('historysizevideo');
+			if(size=="0"){
+			var s=[];
+			s.push(targeturl);s.push("#"+videoname);
+			localStorage.setItem('historyvideo'+size,s);
+			size1=parseInt(size)+1;
+			localStorage.setItem('historysizevideo',size1);
+			}
+			else{
+	function checkhistroy(targeturl){
+	size=localStorage.getItem('historysizevideo');
+	for(i =0; i<size; i++){
+			var histemp=localStorage.getItem('historyvideo'+i.toString());
+			var flag=histemp.split(",")[0]
+			console.log(histemp);
+			console.log(histemp.split(",")[0]);
+			if(flag==targeturl){
+				console.log("历史中已经存在");
+			return false;	
+			}else{
+				console.log(targeturl);
+				console.log(flag);
+			}
+			}
+			return ["ok"];
+	}
+			var insertflag = checkhistroy(targeturl);
+			if(insertflag){
+			var s=[];
+			s.push(targeturl);
+			s.push("#"+videoname);
+			localStorage.setItem('historyvideo'+size,s);
+			size1=parseInt(size)+1;
+			localStorage.setItem('historysizevideo',size1);
+			}}
+			console.log("正在保存视频历史");
+			}
+			
+			if(targeturl!=null){
+                mui.openWindow({
+				url : "videocontent.html",
+				id : 'videocontent',
+				extras : {videooriginurl:videooriginurl,videoname:videoname,videokeyword:videokeyword,videoid:videoid}
+			});
+	        	}
+	        	if(targeturl==null){
+	        	 mui.openWindow({
+				url : "NOvideo.html",
+				id : 'NOvideo',
+			});
+	       }
+		}
+	}
+
+});
+	var page = 1;
+	var cate ="9";
+	var videoname='';
+function getvideo(){
+	page = 1;
+	console.log(cate);
+	mui.getJSON(
+	'http://192.168.5.3:8080/students323/selectvideopapebypage?cid='+cate+'&page='+page+'&videoname='+videoname,
+	function(res){
+	 videoObj.videoList = res.data.list;
+	 console.log(JSON.stringify(res.data));
+	 mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+	 mui('#refreshContainer').pullRefresh().refresh(true);
+		page ++;
+	}
+);
+}
+
+function getMorevideo(){
+	var _self = this;
+	mui.getJSON(
+	'http://192.168.5.3:8080/students323/selectvideopapebypage?cid='+cate+'&page='+page+'&videoname='+videoname,
+	function(res){
+		console.log(res.status);
+		console.log(JSON.stringify(res));
+		if(res.status == 'empty'){
+				_self.endPullupToRefresh(true);
+				return false;
+			}
+			videoObj.videoList = videoObj.videoList.concat(res.data.list);
+			page ++;
+			_self.endPullupToRefresh();
+	}
+);
+}
+
+mui.plusReady(function(){
+	
+	
+})
+
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/pics.css"/>
+	<style type="text/css">
+
+.pics-list{padding:0px; margin:0;}
+.pics-list li{display:flex; width:90%; padding:0px; background:#FFFFFF; margin:1px 18px;border:2px solid #000;}
+.pics-list-img img{width:100%;}
+.pics-list-title{
+line-height:1.2em; font-size:16px;	
+}
+
+	</style>
+	</head>
+
+	<body>
+		
+	<div id="refreshContainer" style="align: center;">
+	<ul class="pics-list">
+		<li id ="li" v-for="item in picsList" @click="showpicscontent(item.picscontent,item.targeturl,item.picsoriginurl,item.picsname,item.picskeyword,item.picsid);">
+			
+			<section class="aui-middle-dome">
+				<div >
+					<h3 class="pics-list-title">{{item.picsname}}</h3>
+			</div>	
+					<div class="aui-title-img">
+						<div class="pics-list-img">		
+				<img class="mui-media-object" v-bind:src="item.picsheadurl" />
+						</div>
+					
+					</div>
+					<div class="aui-title-text clearfix">
+						<span class="aui-ban">{{item.picskeyword}}</span><br>
+						<span class="aui-zan">爬取时间 ：{{item.picsctime| moment}}</span>
+						
+					</div>
+				</a>
+			</section>
+		
+		
+		
+
+
+		</li>
+	</ul>
+</div>	
+
+		
+		<script src="../../js/moment.min.js"></script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script type="text/javascript">
+Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+			mui.init({
+	pullRefresh : {
+		container:"#refreshContainer",
+		down : {
+			style :'circle',
+			auto: true,
+			callback : getpics
+		},
+		up : {
+	       height : 50,
+	       auto : false,
+	       contentrefresh : "正在加载...",
+	       contentnomore  : '没有更多数据了',
+	       callback : getMorepics
+	     }
+	}
+
+});
+		
+var picsObj = new Vue({
+	el : "#refreshContainer",
+	data : {
+		picsList : []
+	},
+	methods : {
+		showpicscontent:function(picscontent,targeturl,picsoriginurl,picsname,picskeyword,picsid){
+		  
+		
+		if(targeturl!=null){
+			size=localStorage.getItem('historysizepics');
+			if(size=="0"){
+			var s=[];
+			s.push(targeturl);s.push("#"+picsname);
+			localStorage.setItem('historypics'+size,s);
+			size1=parseInt(size)+1;
+			localStorage.setItem('historysizepics',size1);
+			}
+			else{
+	function checkhistroy(targeturl){
+	size=localStorage.getItem('historysizepics');
+	for(i =0; i<size; i++){
+			var histemp=localStorage.getItem('historypics'+i.toString());
+			var flag=histemp.split(",")[0]
+			console.log(histemp);
+			console.log(histemp.split(",")[0]);
+			if(flag==targeturl){
+				console.log("历史中已经存在");
+			return false;	
+			}else{
+				console.log(targeturl);
+				console.log(flag);
+			}
+			}
+			return ["ok"];
+	}
+			var insertflag = checkhistroy(targeturl);
+			if(insertflag){
+			var s=[];
+			s.push(targeturl);
+			s.push("#"+picsname);
+			localStorage.setItem('historypics'+size,s);
+			size1=parseInt(size)+1;
+			localStorage.setItem('historysizepics',size1);
+			}}
+			console.log("正在保存图册历史");
+			}
+
+		  
+		  
+		  
+		  var picsoriginurladd=picsoriginurl+'?vt=4&hd=1';
+		    var picsoriginurl=picsoriginurl;
+		  console.log(picsoriginurl);
+		 		if(targeturl!=null){
+				mui.openWindow({
+				url : "picscontent.html",
+				id : 'picscontent',
+				extras : {picscontent:picscontent,targeturl:targeturl,picsoriginurl:picsoriginurl,picsname:picsname,picskeyword:picskeyword,picsid:picsid,}
+			});
+			}
+				if(targeturl==null){
+					mui.openWindow({
+				url : "NOnews.html",
+				id : 'nonews',
+			});
+				}
+				
+		}
+	}
+
+});
+	var page = 1;
+	var cate ="18";
+	var picsname='';
+function getpics(){
+	page = 1;
+	console.log(cate);
+	mui.getJSON(
+	'http://192.168.5.3:8080/students323/selectpicspapebypage?cid='+cate+'&page='+page+'&picsname='+picsname,
+	function(res){
+	 picsObj.picsList = res.data.list;
+	 console.log(JSON.stringify(res.data));
+	 mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+	 mui('#refreshContainer').pullRefresh().refresh(true);
+		page ++;
+	}
+);
+}
+
+function getMorepics(){
+	var _self = this;
+	mui.getJSON(
+	'http://192.168.5.3:8080/students323/selectpicspapebypage?cid='+cate+'&page='+page+'&picsname='+picsname,
+	function(res){
+		console.log(res.status);
+		console.log(JSON.stringify(res));
+		if(res.status == 'empty'){
+				_self.endPullupToRefresh(true);
+				return false;
+			}
+			picsObj.picsList = picsObj.picsList.concat(res.data.list);
+			page ++;
+			_self.endPullupToRefresh();
+	}
+);
+}
+
+mui.plusReady(function(){
+	
+	
+})
+
+		</script>
+	</body>
+
+</html>

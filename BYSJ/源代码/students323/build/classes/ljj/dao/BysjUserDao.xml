@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+  <mapper namespace="ljj.dao.BysjUserDao">
+
+  <resultMap id="BysjUserList" type="BysjUser">
+    <id column="userid" property="userid"/>
+    <result column="nick" property="nick"/>
+    <result column="password" property="password"/>
+    <result column="head" property="head"/>
+    <result column="usertype" property="usertype"/>
+  </resultMap>
+  
+  <select parameterType="string" resultMap="BysjUserList" id="findBysjUser" >select userid,nick,password,head,usertype from user where nick= #{nick} and password=#{password}
+  </select>  
+  
+  <select resultMap="BysjUserList" id="findAllreader">select userid,nick,password,head,usertype from user</select>
+
+<insert parameterType="string" id="insertReader" >
+	insert into
+	user(nick,password,head,usertype)
+	values
+	(#{nick},#{password},#{head},#{usertype})
+</insert>
+
+ <select parameterType="string" resultMap="BysjUserList" id="findBysjUserByNick" >select userid,nick,password,head,usertype from user where nick= #{nick}
+  </select>  
+  
+    <select parameterType="string" resultMap="BysjUserList" id="findAdministrator" >select userid,nick,password,head,usertype from user where nick= #{nick} and usertype="su" and password=#{password}
+  </select>  
+  
+  <update parameterType="string" id="insertreaderheaderimg" >
+ update user
+    	<set>
+         head=#{headerimgPath}
+        </set>
+	where nick=#{nick}
+	
+</update>
+
+   <select id="finduserBynick"  parameterType="String" resultType="BysjUser" >
+       select * from user where nick=#{nick}
+    </select>
+
+    
+        <delete id="deleteUser" parameterType="String" >
+        delete  from user where nick=#{nick} 
+    </delete>
+
+
+</mapper>

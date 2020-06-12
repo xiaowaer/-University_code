@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ljj.dao.NoticeDao" >
+
+
+
+    <insert id="addNotice" parameterType="Notice" >
+        insert into notice (noticecontent,noticetitle,publisher,publishtime,noticetype)
+        values(#{noticecontent},#{noticetitle},#{publisher},#{publishtime},#{noticetype})     
+    </insert>
+  
+
+    
+  
+   <!--分页查询-->
+    <select id="getNoticeList" parameterType="Notice" resultType="Notice">
+        select *from notice
+        <where>
+            <if test="publisher!=null and publisher!='' ">
+                and  publisher like  '%${publisher}%'
+            </if>
+            <if test="noticetitle!=null and noticetitle!=null">
+                and  noticetitle like  '%${noticetitle}%'
+            </if>
+           
+        </where>
+        ORDER BY  noticeid asc
+        limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="totalCount"  resultType="Integer">
+        select count(noticeid) from notice
+        <where>
+               <if test="publisher!=null and publisher!='' ">
+                and publisher like  '%${publisher}%'
+            </if>
+            <if test="noticetitle!=null and noticetitle!=null">
+                and  noticetitle like  '%${noticetitle}%'
+            </if>
+          </where>
+    </select>
+    
+    
+    <select id="findAllnotices" parameterType="Notice" resultType="Notice">
+        select *from notice
+    </select>
+    
+  
+
+</mapper>

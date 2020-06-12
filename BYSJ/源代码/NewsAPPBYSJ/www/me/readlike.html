@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+
+.readlike-list{padding:0; margin:0;}
+.readlike-list li{width:100%;  background:#FFFFFF; margin-bottom:1px;}
+
+</style>
+	
+	</head>
+
+	<body>
+		
+<div>	
+<div class="mui-content" id='readlikeList'>
+	
+		<ul class="readlike-list">
+		<li v-for="(items, index in List" >
+     <div class="mui-input-row mui-checkbox mui-left "style="background-color: #fff; border-bottom:1px solid #000;">
+	  <label>{{items}}</label>
+	  <input class="rds" name="checkbox1"  v-bind:value="items" type="checkbox" >
+	</div>
+ 		
+		</li>
+	</ul>
+</div>	
+
+<button id="submitrl" type="button" class="mui-btn mui-btn-block" style="border-bottom-width: 0; background-color: #FF4500;color: white;position: fixed;bottom: 0;margin-bottom:0px;height: 50px;">提交修改</button>
+</div>	
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			
+	var ListObj = new Vue({
+	el : '#readlikeList',
+	data : {
+		List : []
+	}
+});
+
+
+mui.getJSON(
+	'http://192.168.5.3:8080/students323/findAllcategories',
+	{},
+	function(res){
+		ListObj.List = res.data;
+		console.log(JSON.stringify(res))
+	}
+);
+
+	mui.init({
+		beforeback:function () {
+			var wv = plus.webview.getWebviewById('myinfo');
+			var readlike = str.replace(/\s+/g,"");
+			console.log(readlike);
+			mui.fire(wv , 'save-readlike-event' , {'readlike':str || ''});
+		}
+	})
+
+var tijiaobtn=mui("#submitrl")[0];
+console.log(tijiaobtn);
+var readlikestr=[];
+var str='';
+tijiaobtn.addEventListener('tap' , function(){
+	var rdsObj = document.getElementsByClassName('rds');
+	console.log(rdsObj.length);
+//	console.log(rdsObj[2].value);
+	var cherkVal = null;
+	
+	for(i=0;i<rdsObj.length;i++){
+		if(rdsObj[i].checked){
+			checkVal = rdsObj[i].value;
+			console.log(checkVal);
+			readlikestr.push(checkVal);
+		}	
+	}
+		console.log(readlikestr);
+		str = readlikestr.join("&");
+		console.log(str);
+		mui.back();
+		
+		});
+		
+
+		</script>
+	</body>
+
+</html>

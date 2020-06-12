@@ -1,0 +1,85 @@
+html,body,.login-bg{
+	height: 100%;
+	background-color:#fff ;
+}
+/*注册*/
+
+
+
+
+.zhuce{
+	/*margin-top: 15px;*/
+	width: 80%;
+	margin: 0 auto;
+	padding-top: 35%;
+	color: #e2c0f8;
+	
+}
+.zhuce{
+	padding-top: 10%;
+}
+
+.denglu{
+	padding-top: 10%;
+}
+.zhaohuimima{
+	padding-top: 30%;
+}
+.zhuce-title{
+	font-size: 24px;
+	text-align: center;
+	margin-bottom: 40px;
+	color: #000;
+	font-weight: 400;
+}
+
+.zhuce form{
+	background: none;
+		
+}
+
+.zhuce .mui-input-row{
+	background: rgba(0,0,0,.2);
+	margin-bottom: 20px;
+	border-radius: 5px;
+}
+
+.mui-input-row label{
+	font-size: 14px;
+	color: #fff;
+}
+.mui-input-row input{
+	font-size: 12px;
+	color: #fff;
+}
+
+
+.zhuce-btn{
+	width: 80%;
+	margin: 0 auto;
+	margin-top: 20px;
+	/*padding: 0 20px;*/
+}
+
+.zhuce-btn button{
+	background: #836FFF;
+	border: 0;
+	width: 100%;
+	color: #fff;
+	padding: 10px 0;
+	
+}
+
+.zhuce-btn p{
+	text-align: center;
+	margin: 40px 0 0;
+	color: #ccc;
+	font-size: 12px;
+}
+
+.zhuce-btn a{
+	color: #b848ff;
+	font-size: 20px;
+	text-decoration: underline;
+}
+

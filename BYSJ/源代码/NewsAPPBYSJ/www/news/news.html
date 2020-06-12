@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+	<style type="text/css">
+
+.news-list{padding:0; margin:3px;}
+.news-list li{ padding-top:3px;width:100%; background:#FFFFFF; margin-bottom:2px;border:2px solid #D1D1D1; }
+.news-list-img{width:288px;margin: 0 auto;}
+.news-list-img img{width:100%;}
+.news-list-title{width:100%; margin:0px; line-height:1.2em; font-size:18px;display:block;}
+.keywords{line-height:1.6em; font-size:12px;color: blue;text-align:center;}
+.rtime{line-height:1.0em; font-size:12px;color: #6641E2;text-align: right;}
+</style>
+	</head>
+
+	<body>
+		
+	<div id="refreshContainer">
+	<ul class="news-list">
+		<li v-for="item in newsList" @click="showNewcontent(item.newscontent,item.newstitle,item.newskeywords,item.newsid,item.targeturl,item.newsoriginurl);">
+			<div class="news-list-img">
+          		<img class="mui-media-object" v-bind:src="item.newsheadurl" />
+         	</div>
+         	
+         	<div class="news-list-title">
+         		{{item.newstitle}}。
+         	</div>
+         	
+        <div class="mui-col-xs-12 keywords"><span style="color: red;">关键词:</span>{{item.newskeyword}}</div>
+          <div class="mui-col-xs-12 rtime">发布时间:{{item.newsrtime|moment}}</div>
+          
+		</li>
+	</ul>
+</div>	
+
+
+		<script src="../../js/moment.min.js"></script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		
+		<script type="text/javascript">
+			Vue.filter('moment', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+	
+			mui.init({
+	pullRefresh : {
+		container:"#refreshContainer",
+		down : {
+			style :'circle',
+			auto: true,
+			callback : getNews
+		},
+		up : {
+	       height : 50,
+	       auto : false,
+	       contentrefresh : "正在加载...",
+	       contentnomore  : '没有更多数据了',
+	       callback : getMoreNews
+	     }
+	}
+
+});
+		
+var newsObj = new Vue({
+	el : "#refreshContainer",
+	data : {
+		newsList : []
+	},
+	methods : {
+		showNewcontent:function(Newscontent,Newstitle,Newskeyword,Newsid,Targeturl,Newsurl){
+		console.log(Targeturl);
+		if(Targeturl!=null){
+			size=localStorage.getItem('historysizenews');
+			if(size=="0"){
+			var s=[];
+			s.push(Targeturl);s.push("#"+Newstitle);
+			localStorage.setItem('historynews'+size,s);
+			size1=parseInt(size)+1;
+			localStorage.setItem('historysizenews',size1);
+			}
+			else{
+	function checkhistroy(Targeturl){
+	size=localStorage.getItem('historysizenews');
+	for(i =0; i<size; i++){
+			var histemp=localStorage.getItem('historynews'+i.toString());
+			var flag=histemp.split(",")[0]
+			console.log(histemp);
+			console.log(histemp.split(",")[0]);
+			if(flag==Targeturl){
+				console.log("历史中已经存在");
+			return false;	
+			}else{
+				console.log(Targeturl);
+				console.log(flag);
+			}
+			}
+			return ["ok"];
+	}
+			var insertflag = checkhistroy(Targeturl);
+			if(insertflag){
+			var s=[];
+			s.push(Targeturl);
+			s.push("#"+Newstitle);
+	
+			localStorage.setItem('historynews'+size,s);
+			size1=parseInt(size)+1;
+			localStorage.setItem('historysizenews',size1);
+			}}
+			console.log("正在保存历史新闻");
+			}
+			
+				if(Targeturl!=null){
+				mui.openWindow({
+				url : "newscontent.html",
+				id : 'newscontent',
+				extras : {Newsurl : Newsurl,Newstitle:Newstitle,Newskeyword:Newskeyword,Newscontent:Newscontent,Targeturl:Targeturl,}
+			});
+			}
+				if(Targeturl==null){
+					mui.openWindow({
+				url : "NOnews.html",
+				id : 'nonews',
+			});
+				}
+		}
+	}
+
+});
+	var page = 0;
+	var cate ="1";
+	var newstitle='';
+function getNews(){
+	page = 1;
+	console.log(cate);
+	mui.getJSON(
+	'http://192.168.5.3:8080/students323/selectnewspapebypage?cid='+cate+'&page='+page+'&newstitle='+newstitle,
+	function(res){
+	 newsObj.newsList = res.data.list;
+	 	console.log(JSON.stringify(res))
+	 mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+	 mui('#refreshContainer').pullRefresh().refresh(true);
+		page ++;
+	}
+);
+}
+
+function getMoreNews(){
+	var _self = this;
+	mui.getJSON(
+'http://192.168.5.3:8080/students323/selectnewspapebypage?cid='+cate+'&page='+page+'&newstitle='+newstitle,
+	function(res){
+		console.log(res.status);
+		console.log(JSON.stringify(res));
+		if(res.status == 'empty'){
+				_self.endPullupToRefresh(true);
+				return false;
+			}
+			newsObj.newsList = newsObj.newsList.concat(res.data.list);
+			page ++;
+			_self.endPullupToRefresh();
+	}
+);
+}
+
+
+mui.plusReady(function(){
+	
+})
+
+
+
+		</script>
+	</body>
+
+</html>
