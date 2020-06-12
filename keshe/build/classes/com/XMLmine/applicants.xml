@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<applicants> 
+  <applicant> 
+    <applicantname>000</applicantname>  
+    <password>123456789</password>  
+    <applicantid>1000</applicantid> 
+  </applicant>  
+  <applicant> 
+    <applicantname>010</applicantname>  
+    <password>123</password>  
+    <applicantid>1010</applicantid> 
+  </applicant>  
+  <applicant> 
+    <applicantname>233</applicantname>  
+    <password>123</password>  
+    <applicantid>1233</applicantid> 
+  </applicant>  
+  <applicant> 
+    <applicantname>999</applicantname>  
+    <password>123</password>  
+    <applicantid>1999</applicantid> 
+  </applicant> 
+</applicants>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT applicants (applicant*)>
+<!ELEMENT applicant  (applicantname,password,applicantid)>
+<!ELEMENT applicantname (#PCDATA)>
+<!ELEMENT password   (#PCDATA)>
+<!ELEMENT applicantid (#PCDATA)>
+
+

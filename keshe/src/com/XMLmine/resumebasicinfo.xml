@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resumebasicinfo> 
+  <person> 
+    <basicinfoid>1000</basicinfoid>  
+    <name>管理员</name>  
+    <phone>996</phone>  
+    <email>管理员@alicom</email>  
+    <address>东莞</address>  
+    <idcard>4419001992301037845</idcard>  
+    <bumen>研发部</bumen>  
+    <zhicheng>程序员</zhicheng>  
+    <sex>male</sex> 
+  </person>  
+  <person> 
+    <basicinfoid>1010</basicinfoid>  
+    <name>小娃儿</name>  
+    <phone>13686272033</phone>  
+    <email>'dfa@alicom</email>  
+    <address>东莞</address>  
+    <idcard>4419001992301037845</idcard>  
+    <bumen>研发部</bumen>  
+    <zhicheng>程序员</zhicheng>  
+    <sex>male</sex> 
+  </person>  
+  <person> 
+    <basicinfoid>1233</basicinfoid>  
+    <name>利俊杰</name>  
+    <phone>13686272033</phone>  
+    <email>xiaowafsader@alicom</email>  
+    <address>东莞</address>  
+    <idcard>4419001992301037845</idcard>  
+    <bumen>研发部</bumen>  
+    <zhicheng>程序员</zhicheng>  
+    <sex>male</sex> 
+  </person>  
+  <person> 
+    <basicinfoid>1999</basicinfoid>  
+    <name>超人</name>  
+    <phone>13686272033</phone>  
+    <email>aer@alicom</email>  
+    <address>东莞</address>  
+    <idcard>4419001992301037845</idcard>  
+    <bumen>研发部</bumen>  
+    <zhicheng>程序员</zhicheng>  
+    <sex>male</sex> 
+  </person> 
+</resumebasicinfo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT resumebasicinfo (person*)>
+<!ELEMENT person (basicinfoid,name,phone,email,address,idcard,bumen,zhicheng,sex)>
+<!ELEMENT basicinfoid (#PCDATA)>
+<!ELEMENT name  (#PCDATA)>
+<!ELEMENT phone  (#PCDATA)>
+<!ELEMENT email  (#PCDATA)>
+<!ELEMENT address (#PCDATA)>
+<!ELEMENT idcard (#PCDATA)>
+<!ELEMENT bumen  (#PCDATA)>
+<!ELEMENT zhicheng  (#PCDATA)>
+<!ELEMENT sex (#PCDATA)>

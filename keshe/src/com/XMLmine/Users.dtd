@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT users (user*)>
+<!ELEMENT user  (username,password,role)>
+<!ATTLIST user id CDATA #IMPLIED >
+<!ELEMENT username (#PCDATA)>
+<!ELEMENT password   (#PCDATA)>
+<!ELEMENT role  (#PCDATA)>
+
+
+<!--
+
+!ELEMENT 元素名称 属性名称      数据类型			           属性特点
+							文本   CDATA  			#REQUIRED	       必须给值
+			不能用数字开始（不重复）ID				#IMPLIED	       可有可无	
+			依赖一个取值（外键）	IDREF/ODREFS	    #FIXED value	必须是什么值
+				性别（男/女）	 Enumerated		Default			默认值
+				   别名，用&		      ENTITY
+
+
+-->
