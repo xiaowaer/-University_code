@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="我的经历">
+		<meta name="keywords" content="我的经历">
+		<title>介绍界面</title>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+	
+		<script>
+		
+			function addComment(){
+				var comment = $("#adjust").val();
+				var commenter = $("#commenter").val();
+				var zan = $("option:checked").val();
+
+				$.ajax({
+					type:"post",
+					url:"http://xiaoliwaer.top:520/students323/insertcomment",
+					dataType:"json",
+					contentType:"application/json;charset=UTF-8",
+					data:"{\"comment\":\""+comment+"\",\"commenter\":\""+commenter+"\",\"zan\":\""+zan+"\"}",
+					xhrFields: {
+					    withCredentials: false
+					},
+					success:function(data){
+						if(data > 0){
+							$("#adjust").val();
+							alert("评论成功！！！");
+						} else {
+							alert("操作失败！！！");
+						}
+					}
+				})
+			}
+			
+					function openUrl() {
+						var url = 'showcomment.html';
+				
+						window.location.href = url;
+					}
+		
+		</script>
+	</head>
+	<body class="index">
+		<div data-role="page" class="index">
+			<div data-role="header" >
+				<h1>我的自介绍页面</h1>
+			</div>
+			
+			<div>
+				<p style="color: blue;font-size: 15px;padding-left:10px;"><strong>自我介绍:</strong></br>我是来自城院，16软工三班的利俊杰同学</p>	
+			</div>
+			<div>
+				<p style="font-size: 15px;padding-left: 10px; padding-right: 10px;"><strong>成长轨迹:</strong></br>
+					通过了系统化的专业学习，我在上大学期间，我的技术水平得到了提升，
+					而已心境也变得更加成熟起来，很少再想一起一样闹孩子气了，我觉得在大学期间，
+					我还是收获了很大的进步的，我的进步源于老师们的辛苦付出。
+				</br>
+				 </br><span style="color: red">联系方式:13686272039</span>
+			</p>
+				<div>
+				      <label for="fname">我最喜欢的一首歌是：往后余生</label>
+				  <audio src="https://xiaoliwaer.top:525/music/whys.mp3" controls="controls">
+				</audio>
+				</div>
+			
+
+				
+				<form style="pading:20px;"> 
+					<label for="adjust">
+						你对我的成长轨迹的评论:</label>
+					  <select id="save" data-role="slider">
+            				<option value="fasle">点赞</option>
+           					 <option value="true">取消</option>
+        			</select>
+					
+					<input type="text" name="adjust" id="adjust" style="height:100px;">
+					<label>评论人:</label>
+						<input type="text" name="commenter" id="commenter" style="height:20px;">
+					<input type="submit" value="添加评论" onclick="addComment()"/>
+					
+				</form>
+				<br />
+				<input type="button" value="查看评论" onclick="openUrl();"/>
+			</div>
+
+			<div data-role="popup" id="popup">
+				
+			</div>
+			
+			<div data-role="footer" >
+				<div data-role="navbar" >
+					<ul>
+						<li><a href="menu.html" data-icon="plus" data-theme="a">主菜单</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>
+

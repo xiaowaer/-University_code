@@ -1,0 +1,63 @@
+	
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="jquery作业的首页">
+		<meta name="keywords" content="jquery作业的首页">
+		<title>登陆页面</title>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+		
+		<script>
+			function getUser(){
+				var username = $("#username").val();
+				var password = $("#password").val();
+				var usertype = $("input[type='radio']:checked").val();
+				
+				$.ajax({
+					type:"post",
+					url:"http://xiaoliwaer.top:520/students323/finduser",
+					dataType:"json",
+					contentType:"application/json;charset=UTF-8",
+					data:"{\"username\":\""+username+"\", \"password\":\""+password+"\",\"usertype\":\""+usertype+"\"}",
+					async:false,
+					xhrFields: {
+						 withCredentials: false
+					},
+					success:function(data){
+						if(data.result == "success by su"){
+							window.location.href = "menu.html"
+						} else if(data.result == "successToAdmin") {
+							window.location.href = ""
+						} else if(data.result == "false") {
+							window.location.href = "index.html"
+						}
+					}
+				});
+				
+			}
+		</script>
+	</head>
+	<body>
+		<div data-role="page" >
+			<div data-role="content" >
+		
+				 <form>
+				 	<input type="text" name="username" id="username" placeholder="账号："  />
+					<input type="text" name="password" id="password" placeholder="密码："  />
+				 <fieldset data-role="controlgroup">
+			     	<legend>请选择您的角色：</legend>
+			        <label for="su">管理员</label>
+			        <input type="radio" name="role" id="su" value="su">
+			        <label for="user">普通用户</label>
+			        <input type="radio" name="role" id="user" value="user"> 
+			     </fieldset>
+					<a onclick="getUser()" data-role="button">登录</a>
+				 </form>
+				
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="jquery作业的主页面">
+		<meta name="keywords" content="jquery作业的主页面">
+		<title>登陆页面</title>
+	 	<link href="https://cdn.bootcss.com/jquery-mobile/1.4.2/jquery.mobile.css" rel="stylesheet" />
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
+		<script src="js/jquery-2.1.4.min.js"></script>
+		<script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
+   	   <script src="js/echarts.js"></script>
+
+   	    <title>菜单页面</title>
+   	    <script>
+				function addComment(){
+				var comment = $("#adjust").val();
+				var commenter = $("#commenter").val();
+				var zan = $("option:checked").val();
+
+				$.ajax({
+					type:"post",
+					url:"http://http://xiaoliwaer.top:520/:8080/students323/insertcomment",
+					dataType:"json",
+					contentType:"application/json;charset=UTF-8",
+					data:"{\"comment\":\""+comment+"\",\"commenter\":\""+commenter+"\",\"zan\":\""+zan+"\"}",
+					xhrFields: {
+					    withCredentials: false
+					},
+					success:function(data){
+						if(data > 0){
+							$("#adjust").val();
+							alert("评论成功！！！");
+						} else {
+							alert("操作失败！！！");
+						}
+					}
+				})
+			}
+		
+			function openUrl() {
+				var url = 'showcomment.html';
+				window.location.href = url;
+			}
+		
+			function findAllComment(){
+				var popup = document.getElementById("popup");
+				if(popup.getElementsByTagName("span").length > 0){
+					popup.removeChild("span");
+				}
+				$.ajax({
+					type:"get",
+					url:"http://xiaoliwaer.top:520/students323/comment",
+					xhrFields: {
+					    withCredentials: false
+					},
+					success:function(data){
+						for (var i = 0; i < data.length; i++) {
+							var span = document.createElement("span");
+							span.innerHTML = data[i].user.username + "：" + data[i].comment;
+							popup.appendChild(span);
+						}
+					}
+				})
+			}
+			
+		
+		</script>
+  
+</head>
+
+<body>
+  <div data-role="page">
+      <div data-role="header">
+          <h3>菜单页面</h3>
+      </div>
+      <div data-role="content">
+          <ul data-role="listview">
+              <li>
+      			<a href="myexperience.html" data-transition="pop">
+           		<span>自我介绍页面</span></a>
+        	</li>
+              <li>
+              	<a href="animal.html" data-transition="pop">
+             	<span>我喜欢的不同动物</span></a>
+              </li>
+                    <li>
+      			<a href="showcase_video.html" data-transition="pop">
+           		<span>我喜欢的动漫视频</span></a>
+        		</li>
+        		   <li>
+      			<a href="chart.html" data-transition="pop">
+           		<span>统计图表</span></a>
+        		</li>
+                 <li>
+      			<a href="index.html" data-transition="pop">
+           		<span>退出软件</span></a>
+        	</li>
+            
+          </ul>
+      </div> 
+      </div>
+  </div>
+</body>
+	
+</html>

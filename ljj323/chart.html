@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		 <meta charset="UTF-8">
+   		<title>图表展示</title>
+	<meta charset="UTF-8">
+    <title></title>
+    <link href="https://cdn.bootcss.com/jquery-mobile/1.4.2/jquery.mobile.css" rel="stylesheet">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+	<meta name="description" content="小娃儿的报表">
+	<meta name="keywords" content="小娃儿的报表">
+		<script src="js/echarts.js"></script>
+
+		
+	</head>
+	<body>
+
+  <div id="main" style="width: 500px;height:300px;"></div>
+ 	<script type="text/javascript">
+
+ 	        var myChart = echarts.init(document.getElementById('main'));
+ 	        var option = {
+
+ 	            title: {
+ 	                text: '用户性别'
+ 	            },
+ 	            tooltip: {},
+ 	            legend: {
+ 	                data:['性别']
+ 	            },
+ 	            xAxis: {
+ 	                data: ["男","女"]
+ 	            },
+ 	            yAxis: {},
+ 	            series: [{
+ 	                name: '性别',
+ 	                type: 'bar',
+ 	                data: [4,9 ]
+ 	            }]
+ 	        };
+ 	
+ 	        myChart.setOption(option);
+ 	    </script>
+ 	<div id="main2" style="width: 500px;height:300px;"></div>
+ 	<script type="text/javascript">
+
+ 	        var myChart = echarts.init(document.getElementById('main2'));
+
+ 	           var option = {
+ 	        
+ 	            title:{
+ 	                text:'用户年龄比例'
+ 	          
+ 	          
+ 	            },   
+ 	             tooltip : {
+ 	             trigger: 'item',
+ 	             formatter: "{a} <br/>{b} : {d}%"
+ 	        },
+ 	            series:[{
+ 	            	startAngle:'0',
+ 	                name:'年龄比例',
+ 	                type:'pie',    
+ 	                radius:'60%', 
+ 	                data:[
+ 	                    {value:30,name:'18岁'},
+ 	                    {value:20,name:'21岁'},
+ 	                    {value:35,name:'19岁'},
+ 	                    {value:15,name:'20岁'},
+ 	                    
+ 	                ]
+ 	            }]
+ 	        };
+ 	
+ 	        myChart.setOption(option);
+ 	    </script>
+
+</body>
+</html>
